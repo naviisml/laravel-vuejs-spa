@@ -1,0 +1,110 @@
+<template>
+	<v-button v-if="steamAuth" class="btn btn-block btn-outline ms-auto" type="button" @click="login" :loading="loading">
+		<slot name="label">
+			<div class="d-flex flex-row justify-content-center">
+				<div class="mr-2 pt-1" v-if="loading == false">
+					<i class="fab fa-steam-symbol"></i>
+				</div>
+
+				<p>Continue with Steam</p>
+			</div>
+		</slot>
+	</v-button>
+</template>
+
+<script>
+	export default {
+		name: 'LoginWithsteam',
+
+		computed: {
+			steamAuth: () => '19564444337ea65477d2aeb74b8f1a8e4eee64f70255fb63dbedb5447d551e5c',
+			url: () => '/api/v1/openid/steam'
+		},
+
+		props: {
+			label: {
+				type: String,
+				default: ''
+			}
+		},
+
+		data() {
+			return {
+				loading: false
+			}
+		},
+
+		mounted () {
+			window.addEventListener('message', this.onMessage, false)
+		},
+
+		beforeDestroy () {
+			window.removeEventListener('message', this.onMessage)
+		},
+
+		methods: {
+			async login () {
+				const newWindow = openWindow('', 'Login')
+
+				let checkWindow = setInterval(() => {
+					if(newWindow.closed) {
+						clearInterval(checkWindow)
+						this.loading = false
+					}
+				}, 1000)
+
+				const url = await this.$store.dispatch('auth/fetchOpenIDUrl', {
+					provider: 'steam'
+				})
+
+				this.loading = true
+				newWindow.location.href = url
+			},
+
+			onMessage (e) {
+				// check hostnames??
+				this.loading = false
+
+				this.$store.dispatch('auth/saveToken', {
+					token: e.data.token
+				})
+
+				this.$router.push({ name: 'user.user-profile' })
+			}
+		}
+	}
+
+	/**
+	 * @param  {Object} options
+	 * @return {Window}
+	 */
+	function openWindow (url, title, options = {}) {
+		if (typeof url === 'object') {
+			options = url
+			url = ''
+		}
+
+		options = { url, title, width: 600, height: 720, ...options }
+
+		const dualScreenLeft = window.screenLeft !== undefined ? window.screenLeft : window.screen.left
+		const dualScreenTop = window.screenTop !== undefined ? window.screenTop : window.screen.top
+		const width = window.innerWidth || document.documentElement.clientWidth || window.screen.width
+		const height = window.innerHeight || document.documentElement.clientHeight || window.screen.height
+
+		options.left = ((width / 2) - (options.width / 2)) + dualScreenLeft
+		options.top = ((height / 2) - (options.height / 2)) + dualScreenTop
+
+		const optionsStr = Object.keys(options).reduce((acc, key) => {
+			acc.push(`${key}=${options[key]}`)
+			return acc
+		}, []).join(',')
+
+		const newWindow = window.open(url, title, optionsStr)
+
+		if (window.focus) {
+			newWindow.focus()
+		}
+
+		return newWindow
+	}
+</script>

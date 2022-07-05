@@ -56,7 +56,12 @@
 
 		methods: {
 			async attemptLogin() {
-				const { data } = await this.form.post('/api/v1/login')
+				const { status, data } = await this.form.post('/api/v1/login')
+
+                // check request status
+                if (status != 200) {
+                    return false
+                }
 
 				// Save the token.
 				this.$store.dispatch('auth/saveToken', {

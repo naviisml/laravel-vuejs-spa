@@ -9,6 +9,7 @@
 
 	export default {
 		name: 'Dashboard',
+        layout: 'Auth',
 		guards: [
 			'auth'
 		],

@@ -56,9 +56,9 @@ class RegisterController extends Controller
 		// check if user verified email
         if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
 			throw ValidationException::withMessages(['Check your inbox for a verification mail.']);
-        }
 
-		$user->sendEmailVerificationNotification();
+		    $user->sendEmailVerificationNotification();
+        }
 
 		return $user;
     }

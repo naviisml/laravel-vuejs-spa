@@ -10,7 +10,7 @@ use Illuminate\Notifications\Notifiable;
 use App\Notifications\ResetPassword;
 use App\Notifications\VerifyEmail;
 
-class User extends Authenticatable implements JWTSubject, MustVerifyEmail
+class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
 {
     use Notifiable,
         HasFactory;

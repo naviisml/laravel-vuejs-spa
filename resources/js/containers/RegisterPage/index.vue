@@ -75,7 +75,12 @@
 		methods: {
 			async register () {
 				// Register the user.
-				const { data } = await this.form.post('/api/v1/register')
+				const { status, data } = await this.form.post('/api/v1/register')
+
+                // check request status
+                if (status != 200) {
+                    return false
+                }
 
 				// Log in the user.
 				const { data: { token } } = await this.form.post('/api/v1/login')

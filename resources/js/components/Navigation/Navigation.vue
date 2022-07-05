@@ -9,16 +9,11 @@
 						Home
 					</router-link>
 				</li>
-				<span v-if="user">
+				<span v-if="auth">
 					<li class="nav-item">
-						<router-link class="nav-link" :to="{ name: 'user.user-profile' }">
+						<router-link class="nav-link color-primary" :to="{ name: 'user.user-profile' }">
 							Dashboard
 						</router-link>
-					</li>
-					<li class="nav-item">
-						<a class="nav-link" @click.prevent="logout">
-							Sign Out
-						</a>
 					</li>
 				</span>
 				<span v-else>
@@ -45,17 +40,7 @@
 		name: 'Navigation',
 
 		computed: mapGetters({
-			user: 'auth/user'
-		}),
-
-		methods: {
-			async logout () {
-				// Log out the user
-				await this.$store.dispatch('auth/logout')
-
-				// Redirect to home
-				this.$router.push({ name: 'home' })
-			}
-		}
+			auth: 'auth/check'
+		})
 	}
 </script>

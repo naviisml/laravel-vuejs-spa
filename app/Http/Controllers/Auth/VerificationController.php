@@ -29,9 +29,9 @@ class VerificationController extends Controller
 		if (!$request->hasValidSignature()) {
 			return response()->json(["msg" => "Invalid url."], 401);
 		}
-	
+
 		$user = User::findOrFail($user_id);
-	
+
 		if (!$user->hasVerifiedEmail()) {
 			$user->markEmailAsVerified();
 		}

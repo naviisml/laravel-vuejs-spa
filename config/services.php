@@ -35,6 +35,12 @@ return [
         'client_secret' => env('GITHUB_CLIENT_SECRET'),
     ],
 
+    'discord' => [
+        'client_id' => env('DISCORD_CLIENT_ID'),
+        'client_secret' => env('DISCORD_CLIENT_SECRET'),
+        'redirect' => env('DISCORD_REDIRECT_URI', '/api/v1/oauth/discord/callback'),
+    ],
+
     'example' => [
         'client_id' => env('EXAMPLE_CLIENT_ID'),
         'client_secret' => env('EXAMPLE_CLIENT_SECRET'),

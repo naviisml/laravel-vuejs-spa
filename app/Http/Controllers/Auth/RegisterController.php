@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Notification;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -25,13 +26,25 @@ class RegisterController extends Controller
     /**
      * The user has been registered.
      */
+    /**
+     * The user has been registered.
+     *
+     * @param   \Illuminate\Http\Request    $request
+     * @param   \App\Models\User            $user
+     *
+     * @return  \App\Models\User
+     */
     protected function registered(Request $request, User $user)
     {
         return response()->json($user);
     }
 
     /**
-     * Get a validator for an incoming registration request.
+     * Validare the data
+     *
+     * @param   array  $data
+     *
+     * @return  \Illuminate\Validation\ValidationException
      */
     protected function validator(array $data)
     {
@@ -44,6 +57,10 @@ class RegisterController extends Controller
 
     /**
      * Create a new user instance after a valid registration.
+     *
+     * @param   array  $data
+     *
+     * @return  \App\Models\User
      */
     protected function create(array $data): User
     {

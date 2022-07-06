@@ -28,6 +28,7 @@ Route::post('/login', 'Auth\LoginController@login');
 Route::post('/register', 'Auth\RegisterController@register');
 
 // OAuth Routes...
+Route::get('/oauth/{driver}', 'Auth\OAuthController@redirect');
 Route::post('/oauth/{driver}', 'Auth\OAuthController@redirect');
 Route::get('/oauth/{driver}/callback', 'Auth\OAuthController@handleCallback')->name('oauth.callback');
 

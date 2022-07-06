@@ -24,6 +24,8 @@
 						</form>
 
                         <login-with-steam class=" my-3" />
+
+                        <login-with-discord class=" my-3" />
 					</div>
 				</div>
 			</div>
@@ -34,6 +36,7 @@
 <script>
 	import Form from '../../utils/vue-form'
     import LoginWithSteam from '../../components/LoginWithSteam'
+    import LoginWithDiscord from '../../components/Auth/LoginWithDiscord'
 
 	export default {
 		name: 'Login',
@@ -42,7 +45,8 @@
 		],
 
         components: {
-            LoginWithSteam
+            LoginWithSteam,
+            LoginWithDiscord
         },
 
 		data() {

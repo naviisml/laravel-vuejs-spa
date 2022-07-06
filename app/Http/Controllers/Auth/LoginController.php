@@ -6,6 +6,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Exceptions\VerifyEmailException;
 use App\Http\Controllers\Controller;
 
@@ -18,7 +19,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['guest', 'guest:api'])->except('logout');
+        $this->middleware(['web', 'guest', 'guest:api'])->except('logout');
     }
 
     /**
@@ -41,6 +42,9 @@ class LoginController extends Controller
 
 		// Set the token
         $this->guard()->setToken($token);
+
+        // log the user in on the web guard
+        Auth::guard('web')->login($user, true);
 
         return true;
     }

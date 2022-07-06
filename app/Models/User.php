@@ -37,6 +37,34 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
         'remember_token',
     ];
 
+	/**
+	 * The accessors to append to the model's array.
+	 *
+	 * @var array
+	 */
+	protected $appends = [
+		'accounts',
+	];
+
+    /**
+     * return the oauth providers for the user
+     *
+     * @return \App\Models\OAuthProvider
+     */
+    public function getAccountsAttribute()
+    {
+        $accounts = $this->oauthProviders()->select(['provider', 'provider_user_id', 'provider_user_data', 'created_at', 'updated_at'])->get();
+        $result = [];
+
+        foreach ($accounts as $key => $value) {
+            if ($value['provider']) {
+                $result[$value['provider']] = $value;
+            }
+        }
+
+		return $result;
+    }
+
     /**
      * Get the oauth providers.
      *
@@ -63,6 +91,9 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
         return [];
     }
 
+    /**
+     * @return string
+     */
 	protected function getIpAddress()
 	{
 		foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){

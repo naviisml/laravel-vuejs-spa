@@ -7,6 +7,8 @@ use App\Http\Controllers\Controller;
 use App\Models\OAuthProvider;
 use App\Models\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Request;
 use Laravel\Socialite\Contracts\User as SocialiteUser;
 use Laravel\Socialite\Facades\Socialite;
 
@@ -19,7 +21,7 @@ class OAuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('guest:api');
+        $this->middleware(['web', 'api']);
     }
 
     /**
@@ -44,6 +46,9 @@ class OAuthController extends Controller
             $token = $this->guard()->login($user)
         );
 
+        // log the user in on the web guard
+        Auth::guard('web')->login($user, true);
+
         return view('oauth/callback', [
             'token' => $token,
             'token_type' => 'bearer',
@@ -54,49 +59,54 @@ class OAuthController extends Controller
     /**
      * Find or create a user.
      */
-    protected function findOrCreateUser(string $provider, SocialiteUser $user): User
+    protected function findOrCreateUser(string $provider, SocialiteUser $socialite): User
     {
         $oauthProvider = OAuthProvider::where('provider', $provider)
-            ->where('provider_user_id', $user->getId())
+            ->where('provider_user_id', $socialite->getId())
             ->first();
 
         if ($oauthProvider) {
+            $user = $oauthProvider->user;
+
             $oauthProvider->update([
-                'access_token' => $user->token,
-                'refresh_token' => $user->refreshToken,
+                'provider_user_data' => json_encode($socialite, true),
+                'access_token' => $socialite->token,
+                'refresh_token' => $socialite->refreshToken,
             ]);
 
-            $oauthProvider->user->update([
-                'username' => $user->realname,
-                'email' => $user->email
-            ]);
-
-            return $oauthProvider->user;
+            return $user;
         }
 
-        if (User::where('email', $user->getEmail())->exists()) {
-            throw new EmailTakenException;
-        }
-
-        return $this->createUser($provider, $user);
+        return $this->createUser($provider, $socialite);
     }
 
     /**
      * Create a new user.
      */
-    protected function createUser(string $provider, SocialiteUser $data): User
+    protected function createUser(string $provider, SocialiteUser $socialite): User
     {
-        $user = User::create([
-            'username' => $data->realname,
-            'email' => $data->email
-        ]);
+        // check if the user exists, to link the account to that user, or
+        // create a new user.
+        // NOTE: this is done through cookies, which kinda defeats the purpose
+        // of the api, but this is only used as a *side* service (I need to change this..)
+        if (!($user = Auth::guard('web')->user())) {
+            if (User::where('email', $socialite->getEmail())->exists()) {
+                throw new EmailTakenException;
+            }
+
+            $user = User::create([
+                'username' => $socialite->getName(),
+                'email' => $socialite->getEmail()
+            ]);
+        }
 
 		// Create the OAuth provider entry
 		$user->oauthProviders()->create([
 			'provider' => $provider,
-			'provider_user_id' => $data->id,
-			'access_token' => $data->token,
-			'refresh_token' => $data->refreshToken,
+			'provider_user_id' => $socialite->getId(),
+            'provider_user_data' => json_encode($socialite, true),
+			'access_token' => $socialite->token,
+			'refresh_token' => $socialite->refreshToken,
 		]);
 
 		$user->markEmailAsVerified();

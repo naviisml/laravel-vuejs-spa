@@ -18,7 +18,9 @@ class OAuthProvider extends Model
      *
      * @var array
      */
-    protected $guarded = ['id'];
+    protected $guarded = [
+        'id'
+    ];
 
     /**
      * The attributes that should be hidden for arrays.
@@ -26,7 +28,8 @@ class OAuthProvider extends Model
      * @var array
      */
     protected $hidden = [
-        'access_token', 'refresh_token',
+        'access_token',
+        'refresh_token',
     ];
 
     /**

@@ -5,14 +5,24 @@
 		</span>
 
 		<div class="dropdown-content dropdown-right" :class="{'d-block': state}">
-			<slot name="dropdown-content" />
-		</div>
+            <slot name="dropdown-content" />
+        </div>
 	</div>
 </template>
 
 <script>
 	export default {
 		name: 'VDropdown',
+
+        props: {
+            options: {
+                type: Object,
+                default: {
+                    active: false,
+                    closeTrigger: true
+                }
+            }
+        },
 
 		data() {
 			return {
@@ -23,11 +33,13 @@
 		},
 
 		mounted () {
-			document.addEventListener('click', this.triggerClose)
+            if (this.options.closeTrigger == true) {
+			    document.addEventListener('click', this.triggerClose)
+            }
 		},
 
 		beforeDestroy () {
-			document.removeEventListener('click',this.triggerClose)
+            document.removeEventListener('click',this.triggerClose)
 		},
 
 		methods: {
@@ -38,9 +50,11 @@
 					this.close()
 			},
 			triggerClose(e) {
-				if (!this.$el.contains(e.target)) {
-					this.state = false
+				if (this.$el.contains(e.target)) {
+                    return false
 				}
+
+                this.state = false
 			},
 			open () {
 				this.state = true
@@ -48,7 +62,15 @@
 			close (e) {
 				this.state = false
 			}
-		}
+		},
+
+        watch: {
+            options: function(value) {
+                if (value.active) {
+                    this.state = value.active
+                }
+            }
+        }
 	}
 </script>
 

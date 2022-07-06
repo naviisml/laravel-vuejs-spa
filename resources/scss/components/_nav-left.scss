@@ -1,0 +1,29 @@
+.nav-left
+{
+    width: 300px;
+
+    .dropdown
+    {
+
+        .dropdown-content
+        {
+            background: transparent;
+            color: inherit;
+            position: relative;
+
+            ul.nav-dropdown-items
+            {
+                margin: 0;
+                padding: 0;
+                display: block;
+
+                li.nav-item
+                {
+                    display: block;
+                    margin: 0;
+                    padding: 0;
+                }
+            }
+        }
+    }
+}

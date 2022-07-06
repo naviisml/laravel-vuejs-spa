@@ -15,14 +15,21 @@ export default [
 	},
 
 	{
-		path: '/user/user-dashboard',
-		name: 'user.user-dashboard',
-		component: Page('DashboardPage')
+		path: '/user/user-profile',
+		name: 'user.user-profile',
+		component: Page('UserPage')
+	},
+
+    // Settings
+	{
+		path: '/user/edit-profile',
+		name: 'user.edit-profile',
+		component: Page('UserPage')
 	},
 
 	{
-		path: '/user/user-profile',
-		name: 'user.user-profile',
+		path: '/user/edit-password',
+		name: 'user.edit-password',
 		component: Page('UserPage')
 	},
 

@@ -6,7 +6,7 @@
 	import { shallowRef,  ref, computed } from 'vue'
 
 	// Load layout components dynamically.
-	const requireContext = require.context('../../layouts/', false, /.*\.vue$/)
+	const requireContext = require.context('../layouts/', false, /.*\.vue$/)
 
 	const layouts = requireContext.keys()
 	.map(file =>

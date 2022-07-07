@@ -3,7 +3,7 @@ import { router } from './utils/router'
 import { store } from './utils/store'
 import { components } from './components'
 
-import App from './pages/App/App.vue'
+import App from './components/App.vue'
 
 import './utils'
 

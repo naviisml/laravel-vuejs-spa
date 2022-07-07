@@ -8,4 +8,14 @@ export default [
 		name: 'home',
 		component: Page('HomePage')
 	},
+	{
+		path: '/',
+		name: '404',
+		component: Page('ErrorPage')
+	},
+	{
+		path: '/',
+		name: '403',
+		component: Page('ErrorPage')
+	},
 ]

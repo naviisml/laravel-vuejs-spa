@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
-use App\Models\User\Role as UserRole;
-use App\Models\User\User;
+use App\Models\UserRole;
+use App\Models\User;
 use App\Models\Role;
 
 class RoleAssign extends Command
@@ -52,7 +52,7 @@ class RoleAssign extends Command
 		}
 
 		// Assign role
-		if ($this->confirm('Do you want to assign [' . $role . '] to [' . $user->firstname . ']?', true)) {
+		if ($this->confirm('Do you want to assign [' . $role . '] to [' . $user->username . ']?', true)) {
 			UserRole::create([
 				'user_id' => $user->id,
 				'role' => $role
@@ -70,10 +70,10 @@ class RoleAssign extends Command
 	protected function askUser()
 	{
 		while (!isset($user)) {
-			$input = $this->ask('Search user by email, or id');
-			$user = User::where('email', 'like', "%{$input}%")->orWhere('id', 'like', "%{$input}%")->first();
+			$input = $this->ask('Search user by email, username or id');
+			$user = User::where('email', 'like', "%{$input}%")->orWhere('id', 'like', "%{$input}%")->orWhere('username', 'like', "%{$input}%")->first();
 			if ($user) {
-				if ($this->confirm('Do you mean ' . $user->firstname . '?', true)) {
+				if ($this->confirm('Do you mean ' . $user->username . '?', true)) {
 					break;
 				} else {
 					$user = null;

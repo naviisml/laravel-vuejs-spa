@@ -69,6 +69,14 @@
                 if (value.active) {
                     this.state = value.active
                 }
+
+                if (value.closeTrigger == true) {
+                    document.addEventListener('click', this.triggerClose)
+                }
+
+                if (value.closeTrigger == false) {
+                    document.removeEventListener('click',this.triggerClose)
+                }
             }
         }
 	}

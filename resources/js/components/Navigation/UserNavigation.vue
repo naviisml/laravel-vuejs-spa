@@ -1,5 +1,5 @@
 <template>
-	<nav v-if="user" class="nav-left p-2" :class="{ 'is-hidden': !isHidden }">
+	<nav v-if="user" class="nav-left p-2" :class="{ 'is-hidden': isHidden }">
         <div class="d-flex flex-column" style="height: 100%">
             <!-- Profile -->
             <div class="profile p-1">
@@ -49,7 +49,7 @@
             <!-- Bottom Items -->
             <ul class="nav-list">
 			    <!-- Settings -->
-				<v-dropdown :options="{ active: subIsActive(['/user/edit-']), closeTrigger: false }">
+				<v-dropdown :options="{ active: subIsActive(['/user/edit-']) && (isHidden == false), closeTrigger: (isHidden == false ? false : true) }">
 					<!-- Title -->
 					<template v-slot:title>
 						<li class="nav-item">
@@ -99,10 +99,10 @@
                 <li class="nav-item">
                     <a class="nav-link" @click.prevent="toggleNav">
                         <span class="icon" v-if="isHidden">
-                            <i class="far fa-chevron-left"></i>
+                            <i class="far fa-chevron-right"></i>
                         </span>
                         <span class="icon" v-else>
-                            <i class="far fa-chevron-right"></i>
+                            <i class="far fa-chevron-left"></i>
                         </span>
 
                         <p class="label">Close menu</p>
@@ -121,7 +121,7 @@
 
         data() {
             return {
-                isHidden: true
+                isHidden: false
             }
         },
 

@@ -5,7 +5,6 @@
     -o-transition: width .25s ease-in-out;
     transition: width .25s ease-in-out;
     width: 300px;
-    overflow: hidden;
     box-shadow: none !important;
 
     .profile
@@ -126,6 +125,15 @@
             visibility: hidden;
             opacity: 0;
             transform: translate3d(0, 0, 100%);
+        }
+
+        .dropdown-content
+        {
+            position: absolute;
+            background-color: #FFFFFF;
+            border: 1px solid rgba(var(--color-dark), .05);
+            top: 10px;
+            left: 80px;
         }
     }
 }

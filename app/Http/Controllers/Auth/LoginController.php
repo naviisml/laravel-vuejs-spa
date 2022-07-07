@@ -40,6 +40,9 @@ class LoginController extends Controller
 			throw ValidationException::withMessages(['Unverified email, <a href="/api/v1/email/resend?email=' . $user->email . '"><u>click here</u></a> to resend the email.']);
         }
 
+		// Log the action
+		$user->log('user.login');
+
 		// Set the token
         $this->guard()->setToken($token);
 

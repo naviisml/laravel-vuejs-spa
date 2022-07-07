@@ -23,6 +23,12 @@ Route::get('/email/resend', 'Auth\VerificationController@resend')->name('verific
 
 Route::post('/logout', 'Auth\LoginController@logout');
 
+// Role Routes...
+Route::get('/roles', 'Auth\RoleController@list');
+Route::get('/role/{id}', 'Auth\RoleController@get');
+Route::patch('/role/assign', 'Auth\RoleController@assign');
+Route::delete('/role/delete', 'Auth\RoleController@delete');
+
 // Guest Routes...
 Route::post('/login', 'Auth\LoginController@login');
 Route::post('/register', 'Auth\RegisterController@register');

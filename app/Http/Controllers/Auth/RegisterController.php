@@ -70,6 +70,15 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
         ]);
 
+		// Assign the default role to the user
+		$user->roles()->create([
+			'user_id' => $user->id,
+			'role' => config('roles.default.tag')
+		]);
+
+		// Log the action
+		$user->log('user.create');
+
 		// check if user verified email
         if ($user instanceof MustVerifyEmail && !$user->hasVerifiedEmail()) {
 			throw ValidationException::withMessages(['Check your inbox for a verification mail.']);

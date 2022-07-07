@@ -74,6 +74,9 @@ class OAuthController extends Controller
                 'refresh_token' => $socialite->refreshToken,
             ]);
 
+            // Log the action
+            $user->log('user.login', ['provider' => $provider]);
+
             return $user;
         }
 
@@ -98,6 +101,18 @@ class OAuthController extends Controller
                 'username' => $socialite->getName(),
                 'email' => $socialite->getEmail()
             ]);
+
+            // Assign the default role to the user
+            $user->roles()->create([
+                'user_id' => $user->id,
+                'role' => config('roles.default.tag')
+            ]);
+
+            // Log the action
+            $user->log('user.create', ['provider' => $provider]);
+        } else {
+            // Log the action
+            $user->log('user.link', ['provider' => $provider]);
         }
 
 		// Create the OAuth provider entry

@@ -4,14 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class UserRole extends Model
+class Log extends Model
 {
     /**
      * The table associated with the model.
      *
      * @var string
      */
-    protected $table = 'user_roles';
+    protected $table = 'user_logs';
 
     /**
      * The attributes that aren't mass assignable.
@@ -29,7 +29,9 @@ class UserRole extends Model
      */
     protected $fillable = [
 		'user_id',
-        'role',
+		'ip_address',
+        'metadata',
+		'action',
     ];
 
 	/**
@@ -38,39 +40,37 @@ class UserRole extends Model
 	 * @var array
 	 */
 	protected $appends = [
-		'data',
-		'order',
+		'ip_filtered',
 	];
 
     /**
-     * Return the accociated roles
+     * The timestamp attributes.
      *
-     * @return UserRole
+     * @var array
      */
-    public function getDataAttribute()
-    {
-        return $this->role()->first();
-    }
+	public $timestamps = false;
 
 	/**
-     * Return the `order` value for the role
-     *
-     * @return UserRole
-     */
-	public function getOrderAttribute()
+	 * Filter a IP address
+	 *
+	 * @return  string
+	 */
+	public function getIpFilteredAttribute()
 	{
-        return $this->getDataAttribute() != null ? $this->getDataAttribute()->override : 0;
-	}
+		$ip_array = explode('.', $this->ip_address);
+		$new_ip = [];
+		$i = 0;
 
-    /**
-     * Get the accociated role
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\hasOne
-     */
-    public function role()
-    {
-        return $this->hasOne(Role::class, 'tag', 'role');
-    }
+		foreach($ip_array as $part) {
+			if($part != $ip_array[0] && $part != end($ip_array)) {
+				$new_ip[$i++] = str_repeat("*", strlen($part));
+			} else {
+				$new_ip[$i++] = $part;
+			}
+		}
+
+		return implode('.', $new_ip);
+	}
 
     /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo

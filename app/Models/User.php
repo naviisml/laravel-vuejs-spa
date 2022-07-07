@@ -43,7 +43,9 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
 	 * @var array
 	 */
 	protected $appends = [
+		'permissions',
 		'accounts',
+		'roles',
 	];
 
     /**
@@ -64,6 +66,118 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
 
 		return $result;
     }
+
+    /**
+     * Return the users' roles
+     *
+     * @return UserRole
+     */
+    public function getRolesAttribute()
+    {
+		$roles = $this->roles()->get()->toArray();
+
+		usort($roles, function($a, $b) {
+			return $a['order'] <=> $b['order'];
+		});
+
+		return $roles;
+    }
+
+    /**
+     * Return the users' permissions
+     *
+     * @return UserRole
+     */
+	public function getPermissionsAttribute()
+	{
+		$roles = $this->getRolesAttribute();
+
+		foreach ($roles as $role) {
+			if (isset($role['data']) && is_array($role['data']['permissions']))
+				$permissions = array_merge($permissions ?? [], $role['data']['permissions']);
+		}
+
+		return $permissions ?? [];
+	}
+
+	/**
+	 * Check if the user has a specific permission
+	 *
+	 * @param   string  $permission
+	 *
+	 * @return  boolean
+	 */
+	public function hasPermission($permission)
+	{
+		if (is_array($permission)) {
+			$this->hasPermissions($permission);
+		}
+
+		if (!isset($this->permissions[$permission]) || $this->permissions[$permission] == false) {
+			return false;
+		}
+
+		return true;
+	}
+
+	/**
+	 * Loop through the array of permissions, and check if the user has all of them
+	 *
+	 * @param   array  $permissions
+	 *
+	 * @return  boolean
+	 */
+	public function hasPermissions($permissions)
+	{
+		if (is_array($permissions)) {
+			foreach ($permissions as $permission)  {
+				if ($this->hasPermission($permission) === false) {
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		return $this->hasPermission($permission);
+	}
+
+	/**
+	 * Create a user specific log
+	 *
+	 * @param   string  $action
+	 *
+	 * @return  App\Models\User\Log
+	 */
+	public function log($action = null, $metadata = [])
+	{
+		return Log::create([
+			'user_id' => $this->id,
+			'ip_address' => $this->getIp(),
+			'action' => $action,
+			'metadata' => json_encode($metadata),
+		]);
+	}
+
+    /**
+     * Get the users' roles
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+	public function roles()
+	{
+		return $this->hasMany(UserRole::class, 'user_id', 'id');
+	}
+
+    /**
+     * Get the users' logs
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+	public function logs()
+	{
+		return $this->hasMany(Log::class, 'user_id', 'id');
+	}
 
     /**
      * Get the oauth providers.
@@ -91,10 +205,12 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
         return [];
     }
 
-    /**
-     * @return string
-     */
-	protected function getIpAddress()
+	/**
+	 * Return the client's REAL ip
+	 *
+	 * @return  $ip_address
+	 */
+	protected function getIp()
 	{
 		foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){
 			if (array_key_exists($key, $_SERVER) === true){

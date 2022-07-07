@@ -105,7 +105,7 @@
                             <i class="far fa-chevron-left"></i>
                         </span>
 
-                        <p class="label">Close menu</p>
+                        <p class="label">Collapse</p>
                     </a>
                 </li>
             </ul>

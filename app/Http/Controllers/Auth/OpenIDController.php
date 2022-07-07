@@ -80,10 +80,13 @@ class OpenIDController extends Controller
             ->first();
 
         if ($oauthProvider) {
-            // Create the OAuth provider entry
-            $user->oauthProviders()->update([
+            // Update the OpenID provider entry
+            $oauthProvider->user->oauthProviders()->update([
                 'provider_user_data' => json_encode($user, true),
             ]);
+
+            // Log the action
+            $oauthProvider->user->log('user.login', ['provider' => $provider]);
 
             return $oauthProvider->user;
         }
@@ -105,6 +108,18 @@ class OpenIDController extends Controller
                 'username' => $data->personaname,
                 'email' => "{$data->personaname}@steamcommunity.com"
             ]);
+
+            // Assign the default role to the user
+            $user->roles()->create([
+                'user_id' => $user->id,
+                'role' => config('roles.default.tag')
+            ]);
+
+            // Log the action
+            $user->log('user.create', ['provider' => $provider]);
+        } else {
+            // Log the action
+            $user->log('user.link', ['provider' => $provider]);
         }
 
 		// Create the OAuth provider entry

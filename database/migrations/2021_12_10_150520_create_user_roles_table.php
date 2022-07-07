@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-return new class extends Migration
+class CreateUserRolesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -16,19 +16,18 @@ return new class extends Migration
         Schema::create('user_roles', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('user_id')->unsigned();
-            $table->string('role_tag')->unsigned();
-            $table->timestamp('expires_at')->nullable();
+            $table->string('role');
             $table->timestamps();
 
-            $table->foreign('user_id')
-                ->references('id')
-                ->on('users')
-                ->onDelete('cascade');
+			$table->foreign('user_id')
+				->references('id')
+				->on('users')
+				->onDelete('cascade');
 
-            $table->foreign('role_tag')
-                ->references('tag')
-                ->on('roles')
-                ->onDelete('cascade');
+			$table->foreign('role')
+				->references('tag')
+				->on('roles')
+				->onDelete('cascade');
         });
     }
 
@@ -41,4 +40,4 @@ return new class extends Migration
     {
         Schema::dropIfExists('user_roles');
     }
-};
+}

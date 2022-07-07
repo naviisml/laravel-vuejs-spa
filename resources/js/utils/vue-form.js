@@ -24,7 +24,7 @@ class VueForm
      */
     async post( url ) {
         let response = await axios.post(url, this)
-		
+
         this.parseRequest( response )
 
         return this
@@ -38,6 +38,20 @@ class VueForm
      */
     async patch( url ) {
         let response = await axios.patch(url, this)
+
+        this.parseRequest( response )
+
+        return this
+    }
+
+    /**
+     * Send a PATCH request
+     *
+     * @param  {string}  url
+     * @return {Promise}
+     */
+    async delete( url ) {
+        let response = await axios.delete(url, this)
 
         this.parseRequest( response )
 

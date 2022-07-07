@@ -1,6 +1,11 @@
 .nav-left
 {
+    -webkit-transition: width .25s ease-in-out;
+    -moz-transition: width .25s ease-in-out;
+    -o-transition: width .25s ease-in-out;
+    transition: width .25s ease-in-out;
     width: 300px;
+    overflow: hidden;
     box-shadow: none !important;
 
     .profile
@@ -38,6 +43,7 @@
 
     ul.nav-list
     {
+        min-width: 200px;
 
         li.nav-item
         {
@@ -55,7 +61,6 @@
 
                 .label
                 {
-                    width: 100%;
                     line-height: 1.2rem;
                 }
 
@@ -70,7 +75,8 @@
                         content: " ";
                         position: absolute;
                         left: 0;
-                        margin: auto 0;
+                        top: 50%;
+                        transform: translateY(-50%);
                         height: 20px;
                         border-radius: 10px;
                         width: 5px;
@@ -105,13 +111,21 @@
         }
     }
 
+    .label
+    {
+        transition: .5s;
+        width: 100%;
+    }
+
     &.is-hidden
     {
         width: 70px;
 
         .label
         {
-            display: none !important;
+            visibility: hidden;
+            opacity: 0;
+            transform: translate3d(0, 0, 100%);
         }
     }
 }

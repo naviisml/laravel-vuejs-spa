@@ -1,4 +1,6 @@
 <template>
+    <loading ref="loading" />
+
 	<div class="wrapper d-flex flex-row flex-grow-1">
 		<user-navigation />
 
@@ -14,27 +16,26 @@
 </template>
 
 <script>
+    import Loading from '../components/Loading'
 	import UserNavigation from '../components/Navigation/UserNavigation'
 
 	export default {
 		name: 'DefaultLayout',
 
 		components: {
+            Loading,
 			UserNavigation
 		}
 	}
 </script>
 
 <style scoped>
-.wrapper
-{
+.wrapper {
 	width: 100%;
 	height: 100vh;
 	position: relative;
 }
-
-.wrapcontent
-{
+.wrapcontent {
     background-color: rgb(245, 250, 253);
     border-top-left-radius: 30px;
     border-bottom-left-radius: 30px;

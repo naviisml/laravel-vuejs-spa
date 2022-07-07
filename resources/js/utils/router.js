@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { nextTick } from 'vue'
 import { getGuards, callGuards } from './guards'
+import { store } from './store'
 
 // the routes
 const routes = resolveRoutes(
@@ -59,7 +60,7 @@ function createRouterInstance() {
 	if (components.length === 0) {
 		return next()
 	}
-	
+
 	const routeGuards = await getGuards(components)
 
 	let base = to.matched[0].components.default || false
@@ -69,6 +70,10 @@ function createRouterInstance() {
 		base = await base()
 	if (typeof base === 'object')
 		layout = base.layout
+
+    if (components[components.length - 1].loading !== false) {
+        await nextTick(() => store.dispatch('loading/state', { value: true }))
+    }
 
 	await callGuards(routeGuards, to, from, (...args) => {
 		// Set the application layout only if "next()" was called with no args.
@@ -89,7 +94,7 @@ function createRouterInstance() {
  * @return  {void}
  */
 async function afterEach (to, from) {
-	await nextTick()
+    await nextTick(() => store.dispatch('loading/state', { value: false }))
 }
 
 /**

@@ -40,13 +40,11 @@
     border-top-left-radius: 30px;
     border-bottom-left-radius: 30px;
     touch-event: none;
-    overflow: auto;
     width: 100%;
     height: 100%;
+    overflow: auto;
     height: -webkit-fill-available;
     position: relative;
     touch-event: none;
-    overflow: auto;
-    z-index: 0;
 }
 </style>

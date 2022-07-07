@@ -86,6 +86,39 @@
 					</template>
 				</v-dropdown>
 
+			    <!-- Admin -->
+				<v-dropdown v-if="user.permissions['admin'] == true" :options="{ active: subIsActive(['/admin']) && (isHidden == false), closeTrigger: (isHidden == false ? false : true) }">
+					<!-- Title -->
+					<template v-slot:title>
+						<li class="nav-item">
+                            <a class="nav-link">
+                                <span class="icon">
+                                    <i class="far fa-shield"></i>
+                                </span>
+
+                                <p class="label">
+                                    Admin
+
+                                    <span class="float-right pr-3">
+                                        <i class="fal fa-chevron-down"></i>
+                                    </span>
+                                </p>
+                            </a>
+						</li>
+					</template>
+
+					<!-- Content -->
+					<template v-slot:dropdown-content>
+						<ul class="nav-dropdown-items">
+							<li v-if="user.permissions['admin.roles'] == true" class="nav-item">
+								<router-link class="nav-link" :to="{ name: 'admin.roles' }" :class="{ 'router-link-exact-active': subIsActive(['/admin/role']) }">
+									Roles
+								</router-link>
+							</li>
+						</ul>
+					</template>
+				</v-dropdown>
+
                 <li class="nav-item">
                     <a class="nav-link" @click.prevent="logout">
                         <span class="icon">

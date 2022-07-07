@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Command;
 use App\Models\User;
 
-class CreateUser extends Command
+class UserCreate extends Command
 {
     /**
      * The name and signature of the console command.
@@ -51,7 +51,7 @@ class CreateUser extends Command
 		// Handle errors
         if ($validator->fails()) {
 			$this->error('Error');
-		
+
 			foreach ($validator->errors()->all() as $error) {
 				$this->error($error);
 			}

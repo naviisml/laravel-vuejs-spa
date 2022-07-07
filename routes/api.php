@@ -16,18 +16,28 @@ use Illuminate\Http\Request;
 */
 
 // Authentication Routes...
-Route::get('/me', 'User\UserController@current');
-
-Route::get('/email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
-Route::get('/email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
+Route::get('/me', 'User\UserController@get');
+Route::patch('/me/profile', 'User\UserController@update');
+Route::patch('/me/password', 'User\PasswordController@update');
+Route::get('/me/logs', 'User\LogController@get');
 
 Route::post('/logout', 'Auth\LoginController@logout');
+
+// User Routes...
+Route::get('/users', 'User\UserController@list');
+Route::get('/user/{id}', 'User\UserController@get');
+Route::patch('/user/{id}', 'User\UserController@update');
+Route::get('/user/{id}/logs', 'User\LogController@get');
 
 // Role Routes...
 Route::get('/roles', 'User\RoleController@list');
 Route::get('/role/{id}', 'User\RoleController@get');
 Route::patch('/role/assign', 'User\RoleController@assign');
 Route::delete('/role/delete', 'User\RoleController@delete');
+
+// Email Routes...
+Route::get('/email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');
+Route::get('/email/resend', 'Auth\VerificationController@resend')->name('verification.resend');
 
 // Guest Routes...
 Route::post('/login', 'Auth\LoginController@login');

@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Command;
 use App\Models\User;
 
-class VerifyUser extends Command
+class UserVerify extends Command
 {
     /**
      * The name and signature of the console command.

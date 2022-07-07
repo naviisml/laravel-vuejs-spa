@@ -6,37 +6,37 @@ export default [
 	{
 		path: '/login',
 		name: 'login',
-		component: Page('LoginPage')
+		component: Page('Auth/LoginPage')
 	},
 	{
 		path: '/register',
 		name: 'register',
-		component: Page('RegisterPage')
+		component: Page('Auth/RegisterPage')
 	},
 
 	{
 		path: '/user/user-profile',
 		name: 'user.user-profile',
-		component: Page('UserPage')
+		component: Page('User/ProfilePage')
 	},
 
     // Settings
 	{
 		path: '/user/edit-profile',
 		name: 'user.edit-profile',
-		component: Page('UserPage')
+		component: Page('User/ProfilePage')
 	},
 
 	{
 		path: '/user/edit-password',
 		name: 'user.edit-password',
-		component: Page('UserPage')
+		component: Page('User/ProfilePage')
 	},
 
     // experimental: link discord and steam to your account
     {
 		path: '/link',
 		name: 'link',
-		component: Page('LinkPage/Link')
+		component: Page('User/LinkPage')
 	},
 ]

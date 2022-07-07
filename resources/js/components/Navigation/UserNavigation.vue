@@ -110,6 +110,11 @@
 					<!-- Content -->
 					<template v-slot:dropdown-content>
 						<ul class="nav-dropdown-items">
+							<li v-if="user.permissions['admin.users'] == true" class="nav-item">
+								<router-link class="nav-link" :to="{ name: 'admin.users' }" >
+									Users
+								</router-link>
+							</li>
 							<li v-if="user.permissions['admin.roles'] == true" class="nav-item">
 								<router-link class="nav-link" :to="{ name: 'admin.roles' }" :class="{ 'router-link-exact-active': subIsActive(['/admin/role']) }">
 									Roles

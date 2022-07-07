@@ -1,14 +1,47 @@
 <template>
-	<nav v-if="user" class="nav-left nav-dark">
+	<nav v-if="user" class="nav-left p-2" :class="{ 'is-hidden': !isHidden }">
         <div class="d-flex flex-column" style="height: 100%">
-            <!-- Branding -->
-            <h3 class="nav-branding p-3">Branding</h3>
+            <!-- Profile -->
+            <div class="profile p-1">
+                <v-dropdown>
+                    <!-- Title -->
+                    <template v-slot:title>
+                        <div class="row profile-content">
+                            <div class="col-xs-4 col-lg-3">
+                                <div class="profile-picture">
+                                    <img src="https://st3.depositphotos.com/1767687/16607/v/450/depositphotos_166074422-stock-illustration-default-avatar-profile-icon-grey.jpg" />
+                                </div>
+                            </div>
+                            <div class="col-xs-8 col-lg-9 label">
+                                <div class="mt-2">
+                                    <strong>Company</strong>
+
+                                    <span class="tooltip-bottom float-right" aria-label="Switch Account">
+                                        <i class="fal fa-chevron-down"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </template>
+
+                    <!-- Content -->
+                    <template v-slot:dropdown-content>
+                        <div class="profile-selector">
+                            <!-- Select other company profiles -->
+                        </div>
+                    </template>
+                </v-dropdown>
+            </div>
 
             <!-- Top Items -->
             <ul class="nav-list d-flex flex-grow-1">
                 <li class="nav-item">
                     <router-link class="nav-link" :to="{ name: 'user.user-profile' }">
-                        Dashboard
+                        <span class="icon">
+                            <i class="far fa-compass"></i>
+                        </span>
+
+                        <p class="label">Dashboard</p>
                     </router-link>
                 </li>
             </ul>
@@ -21,11 +54,17 @@
 					<template v-slot:title>
 						<li class="nav-item">
                             <a class="nav-link">
-                                Settings
-
-                                <span class="float-right pr-3">
-                                    <i class="fal fa-chevron-down"></i>
+                                <span class="icon">
+                                    <i class="far fa-cog"></i>
                                 </span>
+
+                                <p class="label">
+                                    Settings
+
+                                    <span class="float-right pr-3">
+                                        <i class="fal fa-chevron-down"></i>
+                                    </span>
+                                </p>
                             </a>
 						</li>
 					</template>
@@ -49,7 +88,24 @@
 
                 <li class="nav-item">
                     <a class="nav-link" @click.prevent="logout">
-                        Sign Out
+                        <span class="icon">
+                            <i class="far fa-lock"></i>
+                        </span>
+
+                        <p class="label">Sign Out</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" @click.prevent="toggleNav">
+                        <span class="icon" v-if="isHidden">
+                            <i class="far fa-chevron-left"></i>
+                        </span>
+                        <span class="icon" v-else>
+                            <i class="far fa-chevron-right"></i>
+                        </span>
+
+                        <p class="label">Close menu</p>
                     </a>
                 </li>
             </ul>
@@ -62,6 +118,12 @@
 
 	export default {
 		name: 'Navigation',
+
+        data() {
+            return {
+                isHidden: true
+            }
+        },
 
 		computed: mapGetters({
 			user: 'auth/user'
@@ -81,6 +143,9 @@
                 return paths.some(path => {
                     return this.$route.path.indexOf(path) === 0 // current path starts with this path string
                 })
+            },
+            toggleNav() {
+                this.isHidden = !this.isHidden
             }
 		}
 	}

@@ -1,19 +1,97 @@
 .nav-left
 {
     width: 300px;
+    box-shadow: none !important;
+
+    .profile
+    {
+        // border: 1px solid rgba(var(--nav-foreground-color), .05);
+        border-radius: 5px;
+
+		.profile-picture
+		{
+			border-radius: 50%;
+			overflow: hidden;
+			height: 40px;
+			width: 40px;
+
+            img
+		    {
+                object-fit: cover;
+                min-height: 100%;
+            }
+		}
+
+        .profile-content
+        {
+            user-select: none;
+            -moz-user-select: none;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .profile-selector
+        {
+            background-color: rgba(var(--nav-foreground-color), .015);
+        }
+    }
+
+    ul.nav-list
+    {
+
+        li.nav-item
+        {
+            position: relative;
+
+            a.nav-link
+            {
+                display: flex !important;
+
+                .icon
+                {
+                    width: 30px;
+                    text-align: left;
+                }
+
+                .label
+                {
+                    width: 100%;
+                    line-height: 1.2rem;
+                }
+
+                &.router-link-exact-active,
+                &.is-active
+                {
+                    position: relative;
+
+                    &:after
+                    {
+                        background: rgb(var(--nav-foreground-color));
+                        content: " ";
+                        position: absolute;
+                        left: 0;
+                        margin: auto 0;
+                        height: 20px;
+                        border-radius: 10px;
+                        width: 5px;
+                    }
+                }
+            }
+        }
+    }
 
     .dropdown
     {
+        //
 
         .dropdown-content
         {
-            background: transparent;
-            color: inherit;
-            position: relative;
+            //
 
             ul.nav-dropdown-items
             {
                 margin: 0;
+                margin-left: 20px;
                 padding: 0;
                 display: block;
 
@@ -24,6 +102,16 @@
                     padding: 0;
                 }
             }
+        }
+    }
+
+    &.is-hidden
+    {
+        width: 70px;
+
+        .label
+        {
+            display: none !important;
         }
     }
 }

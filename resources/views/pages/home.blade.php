@@ -1,7 +1,7 @@
 @extends('layouts.default')
 
 @section('body')
-	<div class="wrapper"></div>
+	<div id="app"></div>
 @endsection
 
 @section('javascript')

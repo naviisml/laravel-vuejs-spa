@@ -35,6 +35,9 @@
 
 .wrapcontent
 {
+    background-color: rgb(245, 250, 253);
+    border-top-left-radius: 30px;
+    border-bottom-left-radius: 30px;
     touch-event: none;
     overflow: auto;
     width: 100%;

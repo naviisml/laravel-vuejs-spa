@@ -4,7 +4,7 @@
 			<slot name="title"/>
 		</span>
 
-		<div class="dropdown-content dropdown-right" :class="{'d-block': state}">
+		<div class="dropdown-content" :class="{'d-block': state}">
             <slot name="dropdown-content" />
         </div>
 	</div>
@@ -75,8 +75,16 @@
 </script>
 
 <style scoped>
+.dropdown {
+    width: 100%;
+}
 .dropdown-content {
 	text-align: left;
+    background: transparent;
+    border: none;
+    box-shadow: none;
+    color: inherit;
+    position: relative;
 }
 .dropdown-content::before,
 .dropdown-content::after {

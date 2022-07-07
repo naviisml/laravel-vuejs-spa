@@ -16,4 +16,4 @@ components.forEach(Component => {
 	app.component(Component.name, Component)
 })
 
-app.mount('.wrapper')
+app.mount('#app')

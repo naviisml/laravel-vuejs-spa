@@ -1,7 +1,5 @@
 <template>
-	<div class="wrapper">
-		<component :is="layout" v-if="layout" />
-	</div>
+    <component :is="layout" v-if="layout" />
 </template>
 
 <script>
@@ -67,7 +65,7 @@
 		for (var key in files) {
 			if (files.hasOwnProperty(key)) {
 				let file = files[key]
-				
+
 				layouts[key.replace(/(^..\/layouts\/)|(\.vue$)/g, '')] = shallowRef(file.default)
 			}
 		}

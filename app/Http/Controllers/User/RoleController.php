@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\User;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -94,7 +94,7 @@ class RoleController extends Controller
 		// Log the action
 		$user->log("role.assign", [
 			"user_id" => $target->id,
-			"user" => $target->realname,
+			"target_id" => $target->id,
 			"role" => $role->tag,
 		]);
 
@@ -133,7 +133,7 @@ class RoleController extends Controller
 		// Log the action
 		$user->log("role.delete", [
 			"user_id" => $target->id,
-			"user" => $target->realname,
+			"target_id" => $target->id,
 			"role" => $role->role,
 		]);
 

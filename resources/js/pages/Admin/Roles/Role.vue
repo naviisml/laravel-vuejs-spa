@@ -1,6 +1,6 @@
 <template>
-	<div class="page" v-if="role">
-		<section class="container py-4">
+    <transition name="animation-fade" mode="out-in" appear>
+        <section v-if="role" class="container py-4">
             <form @submit.prevent="editRole">
                 <!-- Header -->
                 <div class="">
@@ -70,8 +70,8 @@
                     Update
                 </v-button>
             </form>
-		</section>
-	</div>
+        </section>
+    </transition>
 </template>
 
 <script>
@@ -88,7 +88,7 @@
                     tag: '',
                     permissions: []
                 },
-				role: {},
+				role: null,
 				permissions: [
                     'interact',
                     'test'
@@ -180,6 +180,7 @@
 
 		watch: {
 			"$route.params.id": function (id) {
+                this.role = null
 				this.fetchRole(id)
 			}
 		}
@@ -191,5 +192,11 @@
     border: none;
     box-shadow: none;
     border-radius: 15px;
+}
+.animation-fade-enter-active, .animation-fade-leave-active {
+  transition: opacity .05s;
+}
+.animation-fade-enter, .animation-fade-leave-to {
+  opacity: 0;
 }
 </style>

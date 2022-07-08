@@ -77,7 +77,6 @@
 .nav-left .nav-link {
 	padding: 5px 15px !important;
 }
-
 .title {
 	text-transform: uppercase;
 	color: rgb(var(--color-muted));

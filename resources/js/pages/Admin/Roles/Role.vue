@@ -194,10 +194,4 @@
     box-shadow: none;
     border-radius: 15px;
 }
-.animation-fade-enter-active, .animation-fade-leave-active {
-  transition: opacity .15s;
-}
-.animation-fade-enter, .animation-fade-leave-to {
-  opacity: 0;
-}
 </style>

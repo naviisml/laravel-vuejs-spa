@@ -34,7 +34,14 @@
 		</header>
 
 		<!-- Header with top navigation -->
-		<router-view :user.sync="user" :updateUser.sync="this.getUser" />
+		<router-view v-slot="{ Component, route }" :user.sync="user" :updateUser.sync="this.getUser">
+            <!-- Use any custom transition and fallback to `fade` -->
+            <transition :name="route.meta.transition || 'animation-fade'" :mode="route.meta.animationMode || 'out-in'" appear>
+                <div :key="route.name">
+                    <component :is="Component"></component>
+                </div>
+            </transition>
+        </router-view>
 	</div>
 </template>
 

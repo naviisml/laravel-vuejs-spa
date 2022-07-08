@@ -4,7 +4,7 @@
 			<div v-if="form.data && form.data.message" class="alert" :class="{'alert-danger': form.status != 200, 'alert-success': form.status == 200}">{{ form.data.message }}</div>
 		</div>
 
-		<div class="col-md-6">
+		<div class="col-xs-12 col-md-6">
 			<div class="card mx-2">
 				<div class="card-content">
 					Assign new roles
@@ -27,7 +27,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="col-md-6">
+		<div class="col-xs-12 col-md-6">
 			<div class="card mx-2">
 				<table class="table table-responsive">
 					<thead>
@@ -42,7 +42,7 @@
 							<td>{{ role.data.displayname }}</td>
 							<td>{{ role.data.tag }}</td>
 							<td>
-								<button v-if="!role.data.default" @click="this.delete(role.id)" class="btn btn-soft btn-danger tooltip-top" aria-label="Delete">
+								<button @click="this.delete(role.id)" class="btn btn-soft btn-danger tooltip-top" aria-label="Delete">
 									<i class="far fa-trash"></i>
 								</button>
 							</td>

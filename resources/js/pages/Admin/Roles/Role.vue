@@ -1,110 +1,75 @@
 <template>
 	<div class="page" v-if="role">
-		<!-- Header -->
-		<header class="page-header border-bottom p-5">
-			<h2><i class="far fa-tag"></i> {{ data.displayname ?? 'New Role' }}</h2>
-			<p class="text-muted"> {{ data.tag ?? '@new-role' }}</p>
-		</header>
+		<section class="container py-4">
+            <form @submit.prevent="editRole">
+                <!-- Header -->
+                <div class="">
+                    <h2><i class="far fa-tag"></i> {{ form.displayname ?? 'New Role' }}</h2>
+                    <p class="text-muted"> {{ form.tag ?? '@new-role' }}</p>
+                </div>
 
-		<!-- Information -->
-		<section class="page-content p-5">
-			<div class="row">
-				<div class="col-md-6">
-					<div class="card mx-2">
-						<div class="card-content">
-							<h3>Role</h3>
-							<p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                <!-- Information -->
+                <div class="card my-3">
+                    <div class="card-content">
+                        <h3>Role</h3>
+                        <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
 
-							<form @submit.prevent="editRole">
-								<!-- displayname -->
-								<div class="form-group py-3">
-									<label>Displayname</label>
-									<input class="form-control" v-model="data.displayname" type="text" name="text">
-									<p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-								</div>
+                        <!-- displayname -->
+                        <div class="form-group py-3">
+                            <label>Displayname</label>
+                            <input class="form-control" v-model="form.displayname" type="text" name="text">
+                            <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                        </div>
 
-								<!-- tag -->
-								<div class="form-group py-3">
-									<label>Tag</label>
-									<input class="form-control" v-model="data.tag" @keyup="parseRoleTag" type="text" name="text">
-									<p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
-								</div>
+                        <!-- tag -->
+                        <div class="form-group py-3">
+                            <label>Tag</label>
+                            <input class="form-control" v-model="form.tag" @keyup="parseRoleTag" type="text" name="text">
+                            <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
+                        </div>
+                    </div>
+                </div>
 
-								<!-- Submit Button -->
-								<v-button class="my-3">
-									Update
-								</v-button>
-							</form>
-						</div>
-					</div>
-				</div>
+                <!-- Permissions -->
+                <div class="card my-3">
+                    <div class="card-content">
+                        <h3>Permissions</h3>
+                        <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    </div>
 
-				<!-- Permissions -->
-				<div class="col-md-6">
-					<div class="card mx-2">
-						<div class="card-content border-bottom">
-							<h3>Permissions</h3>
-							<p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                    <!-- Permissions -->
+                    <table class="table table-responsive">
+                        <thead>
+                            <tr>
+                                <th>Permission</th>
+                                <th>Allowed</th>
+                                <th colspan="1"></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr v-for="(value, key) in permissions" :key="key">
+                                <td>{{ $t(`permissions.${value}.title`) }} <i class="text-muted">{{ $t(`permissions.${value}.description`) }}</i></td>
+                                <td>
+                                    <select class="form-control p-2" name="state">
+                                        <option value="1">Yes</option>
+                                        <option value="0" :selected="!role.permissions || (role.permissions[value] ?? false) == false">No</option>
+                                    </select>
+                                </td>
+                                <td>
+                                    <button class="btn btn-soft btn-danger tooltip-top" aria-label="Delete" @click="test">
+                                        <i class="far fa-trash"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-							<!-- Add permission -->
-							<form class="py-2" @submit.prevent="addPermission">
-								<div class="row">
-									<!-- Permission -->
-									<div class="col-md-6">
-										<label>Permissions</label>
-										<input class="form-control p-2" v-model="permission.name" type="text" name="text">
-									</div>
-
-									<!-- Allowed -->
-									<div class="col-md-3">
-										<label>Allowed</label>
-										<select class="form-control p-2" name="state" v-model="permission.state">
-											<option value="1">Yes</option>
-											<option value="0">No</option>
-										</select>
-									</div>
-
-									<!-- Submit -->
-									<div class="col-md-3">
-										<label class="text-light">Add</label>
-										<v-button class="btn-block p-2">
-											<i class="fal fa-plus"></i>
-											Add
-										</v-button>
-									</div>
-								</div>
-							</form>
-						</div>
-
-						<!-- Permissions -->
-						<table class="table table-responsive">
-							<thead>
-								<tr>
-									<th>Permission</th>
-									<th>Allowed</th>
-									<th colspan="1"></th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr v-for="(key, value) in role.permissions" :key="key">
-									<td>{{ value }}</td>
-									<td>
-										<select class="form-control p-2" name="state">
-											<option value="1">Yes</option>
-											<option value="0" :selected="key == false">No</option>
-										</select>
-									</td>
-									<td>
-										<button class="btn btn-soft btn-danger tooltip-top" aria-label="Delete" @click="test">
-											<i class="far fa-trash"></i>
-										</button>
-									</td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-				</div>
-			</div>
+                <!-- Submit Button -->
+                <v-button class="my-3">
+                    Update
+                </v-button>
+            </form>
 		</section>
 	</div>
 </template>
@@ -118,18 +83,16 @@
 
 		data () {
 			return {
-				data: {
-					displayname: '',
-					tag: '',
-				},
-				permission: {
-					name: '',
-					state: '1',
-				},
-				role: {
-                    tag: '@',
+				form: {
+                    displayname: '',
+                    tag: '',
                     permissions: []
-                }
+                },
+				role: {},
+				permissions: [
+                    'interact',
+                    'test'
+                ]
 			}
 		},
 
@@ -144,7 +107,7 @@
              * @return  {null}
              */
             parseRoleTag() {
-                var tag = this.data.tag
+                var tag = this.form.tag
 
                 // remove all special characters from tag
                 tag = tag.replace(/[`~!@#$%^&*()_|+\=?;:'",.<>\{\}\[\]\\\/]/gi, '')
@@ -159,7 +122,7 @@
                 tag = tag.replace(/-+/g, "-")
 
                 // replace form data
-                this.data.tag = '@' + tag
+                this.form.tag = '@' + tag
             },
             /**
              * Fetch a role by id
@@ -168,9 +131,16 @@
              *
              * @return  {null}
              */
-			async fetchRole(id) {
+			async fetchRole(id = false) {
+                // reset the form to default data
                 if (!id) {
+                    this.role = {
+                        displayname: 'New Role',
+                        tag: '@new-role',
+                        permissions: {}
+                    }
                     this.resetForm()
+
                     return false
                 }
 
@@ -196,22 +166,30 @@
              *
              * @return  {null}
              */
-			resetForm() {
+			resetForm(data = null) {
+                if (!data) {
+                    data = this.role
+                }
+
 				// Fill the form with user data.
-				Object.keys(this.data).forEach(key => {
-					this.data[key] = this.role[key]
+				Object.keys(this.form).forEach(key => {
+					this.form[key] = data[key] ?? null
 				})
 			}
 		},
 
 		watch: {
 			"$route.params.id": function (id) {
-				this.role = {
-                    tag: '@',
-                    permissions: []
-                }
 				this.fetchRole(id)
 			}
 		}
 	}
 </script>
+
+<style scoped>
+.card {
+    border: none;
+    box-shadow: none;
+    border-radius: 15px;
+}
+</style>

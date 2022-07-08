@@ -1,3 +1,10 @@
 {
-    "welcome": "Welcome, :name!"
+    "welcome": "Welcome, :name!",
+
+    "permissions": {
+        "interact": {
+            "title": "Interact",
+            "description": "Interact with the website"
+        }
+    }
 }

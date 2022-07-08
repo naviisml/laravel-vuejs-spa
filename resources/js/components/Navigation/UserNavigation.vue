@@ -1,5 +1,5 @@
 <template>
-	<nav v-if="user" class="nav-left p-2" :class="{ 'is-hidden': isHidden }">
+	<nav v-if="user" class="nav-left nav-auth p-2" :class="{ 'nav-collapsed': isHidden }">
         <div class="d-flex flex-column" style="height: 100%">
             <!-- Profile -->
             <div class="profile p-1">
@@ -188,3 +188,9 @@
 		}
 	}
 </script>
+<style scoped>
+.nav-left {
+    box-shadow: none;
+    border: none;
+}
+</style>

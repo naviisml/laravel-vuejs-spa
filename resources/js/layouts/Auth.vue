@@ -34,6 +34,7 @@
 	width: 100%;
 	height: 100vh;
 	position: relative;
+    overflow: auto;
 }
 .wrapcontent {
     background-color: rgb(245, 250, 253);
@@ -42,9 +43,8 @@
     touch-event: none;
     width: 100%;
     height: 100%;
-    overflow: auto;
     height: -webkit-fill-available;
     position: relative;
-    touch-event: none;
+    overflow: auto;
 }
 </style>

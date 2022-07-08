@@ -1,11 +1,12 @@
-.nav-left
+.nav-auth
 {
     -webkit-transition: width .25s ease-in-out;
     -moz-transition: width .25s ease-in-out;
     -o-transition: width .25s ease-in-out;
     transition: width .25s ease-in-out;
     width: 300px;
-    box-shadow: none !important;
+    box-shadow: none;
+    border: none;
 
     .profile
     {
@@ -116,7 +117,7 @@
         width: 100%;
     }
 
-    &.is-hidden
+    &.nav-collapsed
     {
         width: 70px;
 
@@ -129,6 +130,7 @@
 
         .dropdown-content
         {
+            z-index: 999;
             position: absolute;
             background-color: #FFFFFF;
             border: 1px solid rgba(var(--color-dark), .05);

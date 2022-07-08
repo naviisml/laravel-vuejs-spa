@@ -3,6 +3,7 @@
 		<!-- Header -->
 		<header class="page-header border-bottom p-5">
 			<h2><i class="far fa-tag"></i> {{ data.displayname ?? 'New Role' }}</h2>
+			<p class="text-muted"> {{ data.tag ?? '@new-role' }}</p>
 		</header>
 
 		<!-- Information -->
@@ -25,7 +26,7 @@
 								<!-- tag -->
 								<div class="form-group py-3">
 									<label>Tag</label>
-									<input class="form-control" v-model="data.tag" type="text" name="text">
+									<input class="form-control" v-model="data.tag" @keyup="parseRoleTag" type="text" name="text" value="@">
 									<p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
 								</div>
 
@@ -134,6 +135,36 @@
 		},
 
 		methods: {
+            /**
+             * Parse the role tag
+             *
+             * @return  {null}
+             */
+            parseRoleTag() {
+                var tag = this.data.tag
+
+                // remove all special characters from tag
+                tag = tag.replace(/[`~!@#$%^&*()_|+\=?;:'",.<>\{\}\[\]\\\/]/gi, '')
+
+                // replace all spaces with `-`
+                tag = tag.replace(/\s+/g, '-')
+
+                // make tag lowercase
+                tag = tag.toLowerCase()
+
+                // replace multiple dashes to one
+                tag = tag.replace(/-+/g, "-")
+
+                // replace form data
+                this.data.tag = '@' + tag
+            },
+            /**
+             * Fetch a role by id
+             *
+             * @param   {number}  id
+             *
+             * @return  {null}
+             */
 			async fetchRole(id) {
                 if (!id) {
                     this.role = {}
@@ -155,6 +186,11 @@
 			addPermission() {
 				console.log(this.permissions)
 			},
+            /**
+             * Reset the form with the new data
+             *
+             * @return  {null}
+             */
 			resetForm() {
 				// Fill the form with user data.
 				Object.keys(this.data).forEach(key => {

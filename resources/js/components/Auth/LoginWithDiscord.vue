@@ -83,8 +83,6 @@
                 if (this.callback) {
                     return this.callback()
                 }
-
-				this.$router.push({ name: 'user.user-profile' })
 			}
 		}
 	}

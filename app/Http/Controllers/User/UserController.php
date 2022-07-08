@@ -42,7 +42,7 @@ class UserController extends Controller
 
 		// Check if the user has these permissions
 		if (!$user->hasPermission('admin.users')) {
-			return response()->json(['message' => 'You do not have the sufficient permissions.'], 401);
+			return abort(401);
 		}
 
 		// Get the user
@@ -65,12 +65,12 @@ class UserController extends Controller
 
 		// check if we have the permissions to update other users (if neccesary)
 		if ($target->id != $user->id && !$user->hasPermissions(['admin.users', 'admin.user.get'])) {
-			return response()->json(['message' => 'You do not have the sufficient permissions.'], 401);
+			return abort(401);
 		}
 
 		// check if $target exists
 		if (!$target) {
-			return response()->json(['message' => 'Target doesn\'t exist.'], 404);
+			return abort(404);
 		}
 
         return response()->json($target);
@@ -86,12 +86,12 @@ class UserController extends Controller
 
 		// check if we have the permissions to update other users (if neccesary)
 		if ($target->id != $user->id && !$user->hasPermissions(['admin.users', 'admin.user.edit'])) {
-			return response()->json(['message' => 'You do not have the sufficient permissions.'], 401);
+			return abort(401);
 		}
 
 		// check if $target exists
 		if (!$target) {
-			return response()->json(['message' => 'Target doesn\'t exist.'], 404);
+			return abort(404);
 		}
 
         $this->validate($request, [

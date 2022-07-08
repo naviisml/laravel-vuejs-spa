@@ -23,7 +23,7 @@ class RoleController extends Controller
 
 		// Check if the user has these permissions
 		if (!$user || !$user->hasPermissions(['admin.roles'])) {
-			return response()->json(['message' => 'You do not have the sufficient permissions.'], 401);
+			return abort(401);
 		}
 
 		$roles = Role::select(['id', 'displayname', 'tag'])->get();
@@ -44,7 +44,7 @@ class RoleController extends Controller
 
 		// Check if the user has these permissions
 		if (!$user || !$user->hasPermissions(['admin.roles', 'admin.role.edit'])) {
-			return response()->json(['message' => 'You do not have the sufficient permissions.'], 401);
+			return abort(401);
 		}
 
 		$role = Role::where('id', $id)->first();
@@ -68,21 +68,21 @@ class RoleController extends Controller
 
 		// check if the user has these permissions
 		if (!$user || !$user->hasPermissions(['admin.user.roles', 'admin.user.roles.assign'])) {
-			return response()->json(['message' => 'You do not have the sufficient permissions.'], 401);
+			return abort(401);
 		}
 
 		// check if the user exists
 		$target = User::where('id', $id)->first();
 
 		if (!$target) {
-			return response()->json(['message' => 'User doesn\'t exist.'], 404);
+			return abort(401);
 		}
 
 		// check if the role exists
 		$role = Role::where(['id' => $role_id])->first();
 
 		if (!$role) {
-			return response()->json(['message' => 'Role doesn\'t exist.'], 404);
+			return abort(404);
 		}
 
 		// Assign the user role
@@ -117,14 +117,14 @@ class RoleController extends Controller
 
 		// Check if the user has these permissions
 		if (!$user || !$user->hasPermissions(['admin.user.roles', 'admin.user.roles.delete'])) {
-			return response()->json(['message' => 'You do not have the sufficient permissions.'], 401);
+			return abort(401);
 		}
 
 		// Get the user
 		$target = User::where('id', $id)->first();
 
 		if (!$target) {
-			return response()->json(['message' => 'User doesn\'t exist.'], 404);
+			return abort(404);
 		}
 
 		// Get the role

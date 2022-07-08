@@ -181,7 +181,8 @@
 		watch: {
 			"$route.params.id": function (id) {
                 this.role = null
-				this.fetchRole(id)
+
+                this.$nextTick(() => this.fetchRole(id))
 			}
 		}
 	}
@@ -194,7 +195,7 @@
     border-radius: 15px;
 }
 .animation-fade-enter-active, .animation-fade-leave-active {
-  transition: opacity .05s;
+  transition: opacity .15s;
 }
 .animation-fade-enter, .animation-fade-leave-to {
   opacity: 0;

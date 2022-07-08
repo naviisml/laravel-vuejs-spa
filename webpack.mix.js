@@ -11,6 +11,20 @@ const mix = require('laravel-mix');
  |
  */
 
+mix.extend('i18n', new class {
+        webpackRules() {
+            return [
+                {
+                    resourceQuery: /blockType=i18n/,
+                    type:          'javascript/auto',
+                    loader:        '@kazupon/vue-i18n-loader',
+                },
+            ];
+        }
+    }(),
+);
+
 mix.js('resources/js/app.js', 'public/dist/js')
 	.vue()
+    .i18n('resources/lang')
     .sass('resources/scss/app.scss', 'public/dist/css');

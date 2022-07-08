@@ -1,5 +1,5 @@
 <template>
-	<p>Hello World!</p>
+	<p>{{ $t('welcome', { name: 'Guest' }) }}</p>
 </template>
 
 <script>

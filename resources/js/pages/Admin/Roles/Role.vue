@@ -26,7 +26,7 @@
 								<!-- tag -->
 								<div class="form-group py-3">
 									<label>Tag</label>
-									<input class="form-control" v-model="data.tag" @keyup="parseRoleTag" type="text" name="text" value="@">
+									<input class="form-control" v-model="data.tag" @keyup="parseRoleTag" type="text" name="text">
 									<p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
 								</div>
 
@@ -52,13 +52,13 @@
 									<!-- Permission -->
 									<div class="col-md-6">
 										<label>Permissions</label>
-										<input class="form-control p-2" v-model="permissions.permission" type="text" name="text">
+										<input class="form-control p-2" v-model="permission.name" type="text" name="text">
 									</div>
 
 									<!-- Allowed -->
 									<div class="col-md-3">
 										<label>Allowed</label>
-										<select class="form-control p-2" name="state" v-model="permissions.state">
+										<select class="form-control p-2" name="state" v-model="permission.state">
 											<option value="1">Yes</option>
 											<option value="0">No</option>
 										</select>
@@ -122,11 +122,14 @@
 					displayname: '',
 					tag: '',
 				},
-				permissions: {
-					permission: '',
+				permission: {
+					name: '',
 					state: '1',
 				},
-				role: null
+				role: {
+                    tag: '@',
+                    permissions: []
+                }
 			}
 		},
 
@@ -167,7 +170,6 @@
              */
 			async fetchRole(id) {
                 if (!id) {
-                    this.role = {}
                     this.resetForm()
                     return false
                 }
@@ -184,7 +186,10 @@
 				console.log(this.data)
 			},
 			addPermission() {
-				console.log(this.permissions)
+                const name = this.permission.name
+                const state = this.permission.state == '1' ? true : false
+
+                console.log(name, state)
 			},
             /**
              * Reset the form with the new data
@@ -201,7 +206,10 @@
 
 		watch: {
 			"$route.params.id": function (id) {
-				this.role = null
+				this.role = {
+                    tag: '@',
+                    permissions: []
+                }
 				this.fetchRole(id)
 			}
 		}

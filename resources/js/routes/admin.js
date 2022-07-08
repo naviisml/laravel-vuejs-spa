@@ -44,12 +44,12 @@ export default [
 	{
 		path: '/admin/users',
 		name: 'admin.users',
-		component: Page('Admin/EditUsers/ListUsers.vue')
+		component: Page('Admin/Users/List')
 	},
 
 	{
 		path: '/admin/user/:id',
-		component: Page('Admin/EditUsers/User.vue'),
+		component: Page('Admin/Users'),
 		children: [
 			{
 				path: '',
@@ -60,17 +60,17 @@ export default [
 			{
 				path: 'user-profile',
 				name: 'admin.user.user-profile',
-				component: Page('Admin/EditUsers/EditProfile.vue')
+				component: Page('Admin/Users/EditProfile')
 			},
 			{
 				path: 'user-logs',
 				name: 'admin.user.user-logs',
-				component: Page('Admin/EditUsers/UserLogs.vue')
+				component: Page('Admin/Users/UserLogs')
 			},
 			{
 				path: 'user-roles',
 				name: 'admin.user.user-roles',
-				component: Page('Admin/EditUsers/EditRoles.vue')
+				component: Page('Admin/Users/EditRoles')
 			}
 		]
 	},

@@ -1,13 +1,13 @@
 <template>
-	<div class="page" v-if="users">
+	<div v-if="users" class="container">
 		<!-- Header -->
-		<header class="page-header border-bottom p-5">
+		<header class="py-5">
 			<h2><i class="far fa-users"></i> Users</h2>
 			<p class="text-muted">Manage the users.</p>
 		</header>
 
 		<!-- Users -->
-		<section class="page-content p-5">
+		<section class="page-content">
 			<div class="card">
 				<table class="table table-responsive">
 					<thead>

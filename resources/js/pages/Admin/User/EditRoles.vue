@@ -2,7 +2,7 @@
     <div class="container py-5" v-if="user">
         <div class="row">
             <div class="col-md-12 mx-2 mb-3">
-                <div v-if="form.data && form.data.message" class="alert" :class="{'alert-danger': form.status != 200, 'alert-success': form.status == 200}">{{ form.data.message }}</div>
+                <div v-if="form.hasMessage()" class="alert" :class="{'alert-danger': form.status != 200, 'alert-success': form.status == 200}" v-html="form.hasMessage()"></div>
             </div>
 
             <div class="col-xs-12 col-md-6">
@@ -74,7 +74,7 @@
 
 		data() {
 			return {
-				form: {},
+				form: new Form(),
 				role_id: null,
 				roles: null,
 				busy: false
@@ -87,21 +87,31 @@
 
 		methods: {
 			async fetch() {
-				const { data } = await new Form({}).get(`/api/v1/roles`)
+				const { status, data } = await this.form.get(`/api/v1/roles`, {})
 
-				this.roles = data
+                if (status == 200) {
+                    this.form.setMessage('Updated your account.')
+
+				    this.roles = data
+                }
 			},
 			async assign() {
-				this.form = new Form({ user_id: this.user.id, role_id: this.role_id })
-				const { data } = await this.form.patch(`/api/v1/role/assign`)
+				const { status, data } = await this.form.patch(`/api/v1/role/assign`, { user_id: this.user.id, role_id: this.role_id })
 
-				this.updateUser(this.user.id)
+                if (status == 200) {
+                    this.form.setMessage('Updated your account.')
+
+				    this.updateUser(this.user.id)
+                }
 			},
 			async delete(role_id) {
-				this.form = new Form({				 params: { user_id: this.user.id, role_id: role_id } })
-				const { data } = await this.form.delete(`/api/v1/role/delete`)
+				const { status, data } = await this.form.delete(`/api/v1/role/delete`, { params: { user_id: this.user.id, role_id: role_id } })
 
-				this.updateUser(this.user.id)
+                if (status == 200) {
+                    this.form.setMessage('Updated your account.')
+
+				    this.updateUser(this.user.id)
+                }
 			},
 		},
 	}

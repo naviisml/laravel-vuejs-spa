@@ -6,18 +6,18 @@
 					<div class="card-content">
 						<h2 class="py-2">Sign In</h2>
 
-						<p v-if="form.data && form.data.message" class="text-danger" v-html="form.data.message"></p>
+                        <div v-if="form.hasMessage()" class="alert my-3" :class="{'alert-danger': form.status != 200, 'alert-success': form.status == 200}" v-html="form.hasMessage()"></div>
 
 						<form @submit.prevent="attemptLogin">
 							<div class="form-group my-3">
 								<label>Email</label>
 								<input class="form-control" type="email" v-model="form.email" placeholder="Email">
-								<p v-if="form.hasError('email')" class="text-danger">{{ form.hasError('email').message }}</p>
+								<p v-if="form.hasError('email')" class="text-danger" v-html="form.hasError('email')"></p>
 							</div>
 							<div class="form-group my-3">
 								<label>Password</label>
 								<input class="form-control" type="password" v-model="form.password" placeholder="Password">
-								<p v-if="form.hasError('password')" class="text-danger">{{ form.hasError('password').message }}</p>
+								<p v-if="form.hasError('password')" class="text-danger" v-html="form.hasError('password')"></p>
 							</div>
 
 							<button class="btn btn-primary btn-block my-3" type="submit">Sign In</button>

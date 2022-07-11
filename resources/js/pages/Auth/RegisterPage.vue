@@ -6,35 +6,35 @@
 					<div class="card-content">
 						<h2>Sign Up</h2>
 
-						<p v-if="form.data && form.data.message" class="text-danger">{{ form.data.message }}</p>
+                        <div v-if="form.hasMessage()" class="alert my-3" :class="{'alert-danger': form.status != 200, 'alert-success': form.status == 200}" v-html="form.hasMessage()"></div>
 
 						<form @submit.prevent="register">
 							<!-- Username -->
 							<div class="form-group py-2">
 								<label><strong>Username</strong></label>
 								<input class="form-control" v-model="form.username" type="text" name="username" placeholder="Username">
-								<p v-if="form.hasError('username')" class="text-danger">{{ form.hasError('username').message }}</p>
+								<p v-if="form.hasError('username')" class="text-danger" v-html="form.hasError('username')"></p>
 							</div>
 
 							<!-- Email -->
 							<div class="form-group py-2">
 								<label><strong>Email</strong></label>
 								<input class="form-control" v-model="form.email" type="email" name="email" placeholder="example@email.com">
-								<p v-if="form.hasError('email')" class="text-danger">{{ form.hasError('email').message }}</p>
+								<p v-if="form.hasError('email')" class="text-danger" v-html="form.hasError('email')"></p>
 							</div>
 
 							<!-- Password -->
 							<div class="form-group py-2">
 								<label><strong>Password</strong></label>
 								<input class="form-control" v-model="form.password" type="password" name="password">
-								<p v-if="form.hasError('password')" class="text-danger">{{ form.hasError('password').message }}</p>
+								<p v-if="form.hasError('password')" class="text-danger" v-html="form.hasError('password')"></p>
 							</div>
 
 							<!-- Password Confirmation -->
 							<div class="form-group py-2">
 								<label><strong>Confirm Password</strong></label>
 								<input class="form-control" v-model="form.password_confirmation" type="password" name="password_confirmation">
-								<p v-if="form.hasError('password_confirmation')" class="text-danger">{{ form.hasError('password_confirmation').message }}</p>
+								<p v-if="form.hasError('password_confirmation')" class="text-danger" v-html="form.hasError('password_confirmation')"></p>
 							</div>
 
 							<!-- TOS -->

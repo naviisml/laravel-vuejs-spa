@@ -37,6 +37,7 @@
     overflow: auto;
 }
 .wrapcontent {
+    border: 1px solid rgb(245, 250, 253);
     background-color: rgb(245, 250, 253);
     border-top-left-radius: 30px;
     border-bottom-left-radius: 30px;

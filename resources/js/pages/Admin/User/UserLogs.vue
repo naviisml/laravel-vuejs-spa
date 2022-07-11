@@ -2,7 +2,7 @@
 	<!-- Logs -->
 	<section class="container py-5">
 		<div class="card">
-			<v-table :endpoint="endpoint" :page="page" :data="['action', 'metadata', 'ip_filtered', 'created_at']"></v-table>
+			<v-table :endpoint="'/api/v1/user/' + id + '/logs'" :page="page" :data="['action', 'metadata', 'ip_filtered', 'created_at']"></v-table>
 		</div>
 	</section>
 </template>
@@ -14,7 +14,6 @@
 		data () {
 			return {
 				id: null,
-				endpoint: null,
 				page: 1
 			}
 		},
@@ -28,7 +27,6 @@
 
 		created() {
 			this.id = this.$route.params.id
-			this.endpoint = '/api/v1/user/' + this.id + '/logs'
 		}
 	}
 </script>

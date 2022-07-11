@@ -116,7 +116,7 @@
 								</router-link>
 							</li>
 							<li v-if="user.permissions['admin.roles'] == true" class="nav-item">
-								<router-link class="nav-link" :to="{ name: 'admin.roles' }" :class="{ 'router-link-exact-active': subIsActive(['/admin/role']) }">
+								<router-link class="nav-link" :to="{ name: 'admin.role.edit', params: { id: 1 } }" :class="{ 'router-link-exact-active': subIsActive(['/admin/role']) }">
 									Roles
 								</router-link>
 							</li>

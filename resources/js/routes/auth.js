@@ -25,13 +25,21 @@ export default [
 	{
 		path: '/user/edit-profile',
 		name: 'user.edit-profile',
-		component: Page('User/ProfilePage')
+		component: Page('Settings/EditProfile.vue')
 	},
 
 	{
 		path: '/user/edit-password',
 		name: 'user.edit-password',
-		component: Page('User/ProfilePage')
+		component: Page('Settings/EditPassword.vue')
+	},
+
+	{
+		path: '/user/user-logs',
+		name: 'user.user-logs',
+		component: Page('Settings/UserLogs.vue')
+	},
+
     // Admin Routes...
 	{
 		path: '/admin/dashboard',

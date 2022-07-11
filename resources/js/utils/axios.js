@@ -31,5 +31,5 @@ axios.interceptors.response.use(response => response, error => {
 		console.error('500 Error: Server Error')
 	}
 
-	return Promise.reject(error.response)
+	return error.response
 })

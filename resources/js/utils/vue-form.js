@@ -111,7 +111,7 @@ class VueForm
         this.errors = []
 
         if (this.data.message) {
-            this.message = form.data.message
+            this.message = this.data.message
         }
 
         if( this.data.errors ) {

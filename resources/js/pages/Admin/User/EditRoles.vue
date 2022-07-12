@@ -89,11 +89,7 @@
 			async fetch() {
 				const { status, data } = await this.form.get(`/api/v1/roles`, {})
 
-                if (status == 200) {
-                    this.form.setMessage('Updated your account.')
-
-				    this.roles = data
-                }
+                this.roles = data
 			},
 			async assign() {
 				const { status, data } = await this.form.patch(`/api/v1/role/assign`, { user_id: this.user.id, role_id: this.role_id })

@@ -12,7 +12,7 @@
                     </div>
                 </strong>
                 <ul class="nav-list" v-if="roles">
-                    <li class="nav-item pb-2" v-for="(role, key) in roles">
+                    <li class="nav-item pb-2" v-for="(role, key) in roles" :key="key">
                         <router-link class="btn btn-soft btn-block" :to="{ name: 'admin.role.edit', params: { id: role.id } }" exact-active-class="btn-active">
                             <strong>{{ role.displayname }}</strong> <i>{{ role.tag }}</i>
                         </router-link>
@@ -37,9 +37,9 @@
                     </div>
 
                     <!-- Form -->
-                    <form @submit.prevent="submitForm">
+                    <form @submit.prevent="createOrUpdate">
                         <!-- Alert -->
-                        <div v-if="!this.isEqual(this.role, this.form)" class="alert alert-danger">
+                        <div v-if="!this.search(this.role, this.form)" class="alert alert-danger">
                             You have unsaved changes!
                         </div>
 
@@ -106,7 +106,7 @@
 </template>
 
 <script>
-	import axios from 'axios'
+	import Form from '../../utils/vue-form'
 	import { mapGetters } from 'vuex'
 
 	export default {
@@ -117,14 +117,14 @@
 			return {
 				roles: null,
 				role: null,
-				form: {
+				form: new Form({
                     id: 0,
                     tag: '',
                     displayname: '',
                     permissions: {},
                     override: 0,
                     default: 0,
-                },
+                }),
 				permissions: {
                     "interact": true,
                     "user.user-logs": true,
@@ -156,7 +156,7 @@
              * @return  {null}
              */
 			async fetchRoles() {
-				const { data } = await axios.get(`/api/v1/roles`)
+				const { data } = await this.form.get('/api/v1/roles', {})
 
 				this.roles = data
 			},
@@ -206,7 +206,7 @@
                     return false
                 }
 
-				const { data } = await axios.get(`/api/v1/role/${id}`)
+				const { data } = await this.form.get(`/api/v1/role/${id}`, {})
 
 				this.role = data
 
@@ -227,12 +227,24 @@
              *
              * @return  {boolean}
              */
-            isEqual(arr1, arr2) {
-                if((arr1 = JSON.stringify(arr1)) === (arr2 = JSON.stringify(arr2))) {
-                    return true
-                }
+            search(array, haystack) {
+                let state = true
 
-                return false
+                Object.keys(array).forEach(key => {
+                    if (haystack[key]) {
+                        if (typeof array[key] !== 'object' && array[key] !== haystack[key]) {
+                            state = false
+                        }
+
+                        if (typeof array[key] === 'object') {
+                            if (this.search(array[key], haystack[key]) === false) {
+                                state = false
+                            }
+                        }
+                    }
+                })
+
+                return state
             },
             /**
              * Reset the form with the new data
@@ -247,7 +259,11 @@
 				// Fill the form with user data.
                 this.copyObject(this.form, data)
 			},
-            copyObject(object, data) {
+            copyObject(object, data = null) {
+                if(data == null) {
+                    return false
+                }
+
                 Object.keys(data).forEach(key => {
                     if (typeof object[key] === 'object') {
                         if (object[key]) {
@@ -260,9 +276,23 @@
                     }
 				})
             },
-			submitForm() {
-				console.log('submit')
+			createOrUpdate() {
+                if (this.form.id != null) {
+				    this.create()
+
+                    return true
+                }
+
+                this.update()
 			},
+            create() {
+                console.log('create')
+            },
+            update() {
+                //const { data } = await this.form.get(`/api/v1/role/${id}`, {})
+
+                console.log('update')
+            }
 		},
 
 		computed: mapGetters({

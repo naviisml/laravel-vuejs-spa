@@ -1,8 +1,8 @@
 <template>
 	<div class="row row-stretch">
+        <!-- Menu -->
 		<div class="col-xs-12 col-md-3 p-4">
             <nav class="nav-left p-3">
-                <!-- Security -->
                 <strong class="title d-flex">
                     Roles
                     <div class="ml-auto">
@@ -26,14 +26,21 @@
             </nav>
 		</div>
 
+        <!-- Role -->
 		<div class="col-xs-12 col-md-9">
             <transition name="animation-fade" mode="out-in" appear>
                 <section v-if="role" class="container py-4">
-                    <form @submit.prevent="editRole">
-                        <!-- Header -->
-                        <div class="">
-                            <h2><i class="far fa-tag"></i> {{ form.displayname ?? 'New Role' }}</h2>
-                            <p class="text-muted"> {{ form.tag ?? '@new-role' }}</p>
+                    <!-- Header -->
+                    <div class="">
+                        <h2><i class="far fa-tag"></i> {{ form.displayname ?? 'New Role' }}</h2>
+                        <p class="text-muted"> {{ form.tag ?? '@new-role' }}</p>
+                    </div>
+
+                    <!-- Form -->
+                    <form @submit.prevent="submitForm">
+                        <!-- Alert -->
+                        <div v-if="!this.isEqual(this.role, this.form)" class="alert alert-danger">
+                            You have unsaved changes!
                         </div>
 
                         <!-- Information -->
@@ -71,22 +78,16 @@
                                     <tr>
                                         <th>Permission</th>
                                         <th>Allowed</th>
-                                        <th colspan="1"></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr v-for="(value, key) in permissions" :key="key">
+                                    <tr v-for="(key, value) in permissions" :key="value">
                                         <td>{{ $t(`permissions.${value}.title`) }} <i class="text-muted">{{ $t(`permissions.${value}.description`) }}</i></td>
                                         <td>
-                                            <select class="form-control p-2" name="state">
-                                                <option value="1">Yes</option>
-                                                <option value="0" :selected="!role.permissions || (role.permissions[value] ?? false) == false">No</option>
+                                            <select class="form-control p-2" v-model="form.permissions[value]">
+                                                <option :value="true">Yes</option>
+                                                <option :value="false" :selected="!role.permissions || !role.permissions[value]">No</option>
                                             </select>
-                                        </td>
-                                        <td>
-                                            <button class="btn btn-soft btn-danger tooltip-top" aria-label="Delete" @click="test">
-                                                <i class="far fa-trash"></i>
-                                            </button>
                                         </td>
                                     </tr>
                                 </tbody>
@@ -117,14 +118,29 @@
 				roles: null,
 				role: null,
 				form: {
-                    displayname: '',
+                    id: 0,
                     tag: '',
-                    permissions: []
+                    displayname: '',
+                    permissions: {},
+                    override: 0,
+                    default: 0,
                 },
-				permissions: [
-                    'interact',
-                    'test'
-                ]
+				permissions: {
+                    "interact": true,
+                    "user.user-logs": true,
+                    "user.edit-profile": true,
+                    "user.edit-password": true,
+                    "admin": false,
+                    "admin.users": false,
+                    "admin.user.get": false,
+                    "admin.user.edit": false,
+                    "admin.user.roles": false,
+                    "admin.user.roles.assign": false,
+                    "admin.user.roles.delete": false,
+                    "admin.user.logs": false,
+                    "admin.roles": false,
+                    "admin.role.edit": false
+                }
 			}
 		},
 
@@ -178,11 +194,14 @@
                 // reset the form to default data
                 if (!id) {
                     this.role = {
-                        displayname: 'New Role',
+                        id: 0,
                         tag: '@new-role',
-                        permissions: {}
+                        displayname: 'New Role',
+                        permissions: this.permissions,
+                        override: 0,
+                        default: 0,
                     }
-                    this.resetForm()
+                    this.resetForm(this.role)
 
                     return false
                 }
@@ -190,20 +209,31 @@
 				const { data } = await axios.get(`/api/v1/role/${id}`)
 
 				this.role = data
-				this.resetForm()
-			},
-			editRole() {
-				console.log('test')
-			},
-			test() {
-				console.log(this.data)
-			},
-			addPermission() {
-                const name = this.permission.name
-                const state = this.permission.state == '1' ? true : false
 
-                console.log(name, state)
+                // sync the permission settings with the form data
+                Object.keys(this.permissions).forEach(key => {
+                    if (!this.role.permissions[key]) {
+                        this.role.permissions[key] = false
+                    }
+				})
+
+				this.resetForm(this.role)
 			},
+            /**
+             * Check if the 2 given arrays are equal
+             *
+             * @param   {array}  arr1
+             * @param   {array}  arr2
+             *
+             * @return  {boolean}
+             */
+            isEqual(arr1, arr2) {
+                if((arr1 = JSON.stringify(arr1)) === (arr2 = JSON.stringify(arr2))) {
+                    return true
+                }
+
+                return false
+            },
             /**
              * Reset the form with the new data
              *
@@ -215,10 +245,24 @@
                 }
 
 				// Fill the form with user data.
-				Object.keys(this.form).forEach(key => {
-					this.form[key] = data[key] ?? null
+                this.copyObject(this.form, data)
+			},
+            copyObject(object, data) {
+                Object.keys(data).forEach(key => {
+                    if (typeof object[key] === 'object') {
+                        if (object[key]) {
+                            object[key] = {}
+                        }
+
+                        this.copyObject(object[key], data[key])
+                    } else {
+                        object[key] = data[key] ?? null
+                    }
 				})
-			}
+            },
+			submitForm() {
+				console.log('submit')
+			},
 		},
 
 		computed: mapGetters({

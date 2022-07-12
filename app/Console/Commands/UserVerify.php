@@ -45,6 +45,11 @@ class UserVerify extends Command
 		if ($this->confirm('Do you want to assign [' . $role . '] to [' . $user->firstname . ']?', true)) {
 			$user->markEmailAsVerified();
 
+            // Log the action
+            $user->log("user.verified", [
+                "admin_id" => "console",
+            ]);
+
 			$this->info("User {$username} validated.");
 		}
 

@@ -65,6 +65,9 @@ class UserCreate extends Command
             'password' => bcrypt($password),
         ]);
 
+        // Log the action
+        $user->log('user.create', ['provider' => "console"]);
+
 		$this->info("User {$username} created.");
 		return 0;
     }

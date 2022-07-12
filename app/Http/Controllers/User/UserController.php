@@ -105,14 +105,6 @@ class UserController extends Controller
 			"user_id" => $target->id,
 		]);
 
-        // Log the action at the target's side
-        if ($user != $target) {
-            $target->log($logName, [
-                "user_id" => $user->id,
-                "admin" => $user->hasPermission('admin')
-            ]);
-        }
-
         return response()->json($target);
     }
 

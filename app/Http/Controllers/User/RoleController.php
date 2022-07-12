@@ -28,6 +28,10 @@ class RoleController extends Controller
 
 		$roles = Role::select(['id', 'displayname', 'tag'])->get();
 
+        if (!$roles) {
+            return abort(404);
+        }
+
 		return $roles;
 	}
 
@@ -48,6 +52,10 @@ class RoleController extends Controller
 		}
 
 		$role = Role::where('id', $id)->first();
+
+        if (!$role) {
+            return abort(404);
+        }
 
 		return $role;
 	}

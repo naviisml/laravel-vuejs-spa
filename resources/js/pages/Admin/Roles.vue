@@ -6,9 +6,9 @@
                 <strong class="title d-flex">
                     Roles
                     <div class="ml-auto">
-                        <router-link :to="{ name: 'admin.role.create' }" class="tooltip-left" aria-label="Create new role">
+                        <a class="tooltip-left" aria-label="Create new role" @click.prevent="createNewRole">
                             <i class="far fa-plus"></i>
-                        </router-link>
+                        </a>
                     </div>
                 </strong>
                 <ul class="nav-list" v-if="roles">
@@ -86,7 +86,7 @@
                                         <td>
                                             <select class="form-control p-2" v-model="form.permissions[value]">
                                                 <option :value="true">Yes</option>
-                                                <option :value="false" :selected="!role.permissions || !role.permissions[value]">No</option>
+                                                <option :value="role.permissions[value] ? '0' : false" :selected="!role.permissions || !role.permissions[value]">No</option>
                                             </select>
                                         </td>
                                     </tr>
@@ -161,6 +161,60 @@
 				this.roles = data
 			},
             /**
+             * Fetch a role by id
+             *
+             * @param   {number}  id
+             *
+             * @return  {null}
+             */
+			async fetchRole(id = false) {
+				const { data, status } = await this.form.get(`/api/v1/role/${id}`, {})
+
+                if (status == 200) {
+                    this.role = data
+
+                    // sync the permission settings with the form data
+                    Object.keys(this.permissions).forEach(key => {
+                        if (!this.role.permissions[key]) {
+                            this.role.permissions[key] = false
+                        }
+                    })
+
+                    this.resetForm(this.role)
+                } else {
+                    this.$router.push({ name: 'admin.role.edit', params: { id: 1 } })
+                }
+			},
+            /**
+             * Check if the 2 given arrays are equal
+             *
+             * @param   {array}  arr1
+             * @param   {array}  arr2
+             *
+             * @return  {boolean}
+             */
+            search(array, haystack) {
+                let state = true
+
+                Object.keys(array).forEach(key => {
+                    if (haystack[key]) {
+                        if (typeof array[key] !== 'object') {
+                            if (array[key] !== haystack[key]) {
+                                state = false
+                            }
+                        }
+
+                        if (typeof array[key] === 'object') {
+                            if (this.search(array[key], haystack[key]) === false) {
+                                state = false
+                            }
+                        }
+                    }
+                })
+
+                return state
+            },
+            /**
              * Parse the role tag
              *
              * @return  {null}
@@ -184,81 +238,13 @@
                 this.form.tag = '@' + tag
             },
             /**
-             * Fetch a role by id
+             * Copy a Object to another object
              *
-             * @param   {number}  id
-             *
-             * @return  {null}
-             */
-			async fetchRole(id = false) {
-                // reset the form to default data
-                if (!id) {
-                    this.role = {
-                        id: 0,
-                        tag: '@new-role',
-                        displayname: 'New Role',
-                        permissions: this.permissions,
-                        override: 0,
-                        default: 0,
-                    }
-                    this.resetForm(this.role)
-
-                    return false
-                }
-
-				const { data } = await this.form.get(`/api/v1/role/${id}`, {})
-
-				this.role = data
-
-                // sync the permission settings with the form data
-                Object.keys(this.permissions).forEach(key => {
-                    if (!this.role.permissions[key]) {
-                        this.role.permissions[key] = false
-                    }
-				})
-
-				this.resetForm(this.role)
-			},
-            /**
-             * Check if the 2 given arrays are equal
-             *
-             * @param   {array}  arr1
-             * @param   {array}  arr2
-             *
-             * @return  {boolean}
-             */
-            search(array, haystack) {
-                let state = true
-
-                Object.keys(array).forEach(key => {
-                    if (haystack[key]) {
-                        if (typeof array[key] !== 'object' && array[key] !== haystack[key]) {
-                            state = false
-                        }
-
-                        if (typeof array[key] === 'object') {
-                            if (this.search(array[key], haystack[key]) === false) {
-                                state = false
-                            }
-                        }
-                    }
-                })
-
-                return state
-            },
-            /**
-             * Reset the form with the new data
+             * @param   {object}  object
+             * @param   {object}  data
              *
              * @return  {null}
              */
-			resetForm(data = null) {
-                if (!data) {
-                    data = this.role
-                }
-
-				// Fill the form with user data.
-                this.copyObject(this.form, data)
-			},
             copyObject(object, data = null) {
                 if(data == null) {
                     return false
@@ -276,8 +262,47 @@
                     }
 				})
             },
+            /**
+             * Reset the form with the new data
+             *
+             * @return  {null}
+             */
+			resetForm(data = null) {
+                if (!data) {
+                    data = this.role
+                }
+
+				// Fill the form with user data.
+                this.copyObject(this.form, data)
+			},
+            /**
+             * Create a new role
+             *
+             * @return  {null}
+             */
+            createNewRole() {
+                const role = {
+                    id: 0,
+                    tag: '@new-role',
+                    displayname: 'New Role',
+                    permissions: { ...this.permissions },
+                    override: 0,
+                    default: 0,
+                }
+
+                this.role = role
+                this.roles = { ...this.roles, role }
+
+                this.resetForm(this.role)
+                this.$router.push({ name: 'admin.role.edit', params: { id: 0 } })
+            },
+            /**
+             * Submit the Roles form
+             *
+             * @return  {null}
+             */
 			createOrUpdate() {
-                if (this.form.id != null) {
+                if (this.form.id === 0) {
 				    this.create()
 
                     return true
@@ -290,7 +315,6 @@
             },
             update() {
                 //const { data } = await this.form.get(`/api/v1/role/${id}`, {})
-
                 console.log('update')
             }
 		},
@@ -301,6 +325,8 @@
 
 		watch: {
 			"$route.params.id": function (id) {
+                if (this.role && this.role.id == id) return;
+
                 this.role = null
 
                 this.$nextTick(() => this.fetchRole(id))

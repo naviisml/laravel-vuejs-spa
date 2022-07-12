@@ -29,7 +29,7 @@ class VueForm
             data = this
         }
 
-        let response = await axios.post(url, this)
+        let response = await axios.post(url, data)
 
         this.parseRequest( response )
 
@@ -49,7 +49,7 @@ class VueForm
             data = this
         }
 
-        let response = await axios.patch(url, this)
+        let response = await axios.patch(url, data)
 
         this.parseRequest( response )
 
@@ -69,7 +69,7 @@ class VueForm
             data = this
         }
 
-        let response = await axios.delete(url, this)
+        let response = await axios.delete(url, data)
 
         this.parseRequest( response )
 
@@ -89,7 +89,7 @@ class VueForm
             data = this
         }
 
-        let response = await axios.get(url, this)
+        let response = await axios.get(url, data)
 
         this.parseRequest( response )
 

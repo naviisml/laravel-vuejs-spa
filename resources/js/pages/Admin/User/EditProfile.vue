@@ -54,9 +54,7 @@
 				const { status } = await this.form.patch(`/api/v1/user/${this.user.id}`)
 
                 if (status == 200) {
-                    this.form.setMessage('Updated your account.')
-
-				    this.updateUser(this.user.id)
+                    this.form.setMessage('Updated account.')
                 }
 			},
 			reset() {

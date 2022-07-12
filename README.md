@@ -10,6 +10,7 @@ This boilerplate contains the basic features needed to start on a fresh laravel 
 - Store
 - ~~Languages~~
 - Authentication
+- ~~RBAC: Role Based Authentication System~~
 
 ## Prerequisites
 

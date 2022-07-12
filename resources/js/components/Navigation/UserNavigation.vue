@@ -82,6 +82,11 @@
 									Password
 								</router-link>
 							</li>
+							<li class="nav-item">
+								<router-link class="nav-link" :to="{ name: 'user.user-logs' }" >
+									Logs
+								</router-link>
+							</li>
 						</ul>
 					</template>
 				</v-dropdown>

@@ -109,9 +109,12 @@ class VueForm
         this.data = data
         this.status = status
         this.errors = []
+        this.message = this.data.message ?? null
 
-        if (this.data.message) {
-            this.message = this.data.message
+        // reset the errors & message
+        if (this.status == 200) {
+            this.errors = []
+            this.message = null
         }
 
         if( this.data.errors ) {

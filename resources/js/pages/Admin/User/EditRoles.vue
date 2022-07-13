@@ -92,7 +92,7 @@
                 this.roles = data
 			},
 			async assign() {
-				const { status, data } = await this.form.patch(`/api/v1/role/assign`, { user_id: this.user.id, role_id: this.role_id })
+				const { status, data } = await this.form.post(`/api/v1/role/assign`, { user_id: this.user.id, role_id: this.role_id })
 
                 if (status == 200) {
                     this.form.setMessage('Updated your account.')
@@ -101,7 +101,7 @@
                 }
 			},
 			async delete(role_id) {
-				const { status, data } = await this.form.delete(`/api/v1/role/delete`, { params: { user_id: this.user.id, role_id: role_id } })
+				const { status, data } = await this.form.delete(`/api/v1/role/unassign`, { params: { user_id: this.user.id, role_id: role_id } })
 
                 if (status == 200) {
                     this.form.setMessage('Updated your account.')

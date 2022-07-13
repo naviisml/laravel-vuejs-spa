@@ -8,9 +8,9 @@ This boilerplate contains the basic features needed to start on a fresh laravel 
 	- Route Guards
 - Layouts
 - Store
-- ~~Languages~~
+- Languages
 - Authentication
-- ~~RBAC: Role Based Authentication System~~
+- RBAC: Role Based Authentication System
 
 ## Prerequisites
 

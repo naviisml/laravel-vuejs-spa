@@ -32,8 +32,11 @@ Route::get('/user/{id}/logs', 'User\LogController@get');
 // Role Routes...
 Route::get('/roles', 'User\RoleController@list');
 Route::get('/role/{id}', 'User\RoleController@get');
-Route::patch('/role/assign', 'User\RoleController@assign');
-Route::delete('/role/delete', 'User\RoleController@delete');
+Route::post('/role/create', 'User\RoleController@create');
+Route::patch('/role/{id}/update', 'User\RoleController@update');
+Route::delete('/role/{id}/remove', 'User\RoleController@remove');
+Route::post('/role/assign', 'User\RoleController@assign');
+Route::delete('/role/unassign', 'User\RoleController@unassign');
 
 // Email Routes...
 Route::get('/email/verify/{id}/{hash}', 'Auth\VerificationController@verify')->name('verification.verify');

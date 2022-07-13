@@ -6,7 +6,7 @@
                 <strong class="title d-flex">
                     Roles
                     <div class="ml-auto">
-                        <a class="tooltip-left" aria-label="Create new role" @click.prevent="createNewRole">
+                        <a class="tooltip-left" aria-label="Create new role" @click.prevent="newRoleTemplate">
                             <i class="far fa-plus"></i>
                         </a>
                     </div>
@@ -54,7 +54,7 @@
                                 <!-- tag -->
                                 <div class="form-group py-3">
                                     <label>Tag</label>
-                                    <input class="form-control" v-model="form.tag" @keyup="parseRoleTag" type="text" name="text">
+                                    <input class="form-control" v-model="form.tag" @keyup="parseRoleTag" type="text" name="text" :disabled="role.default">
                                     <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
                                 </div>
                             </div>
@@ -77,7 +77,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="(key, value) in permissions" :key="value">
-                                        <td>{{ $t(`permissions.${value}.title`) }} <i class="text-muted">{{ $t(`permissions.${value}.description`) }}</i></td>
+                                        <td>{{ $t(`permissions.${value.replace(/\./g, "-")}.title`) }} <i class="text-muted">{{ $t(`permissions.${value.replace(/\./g, "-")}.description`) }}</i></td>
                                         <td>
                                             <select class="form-control p-2" v-model="form.permissions[value]">
                                                 <option :value="true">Yes</option>
@@ -89,10 +89,13 @@
                             </table>
                         </div>
 
+                        <div class="btn btn-danger" @click="remove()">Delete</div>
+
                         <!-- Alert -->
-                        <div v-if="!this.search(this.role, this.form)" class="alert alert-dark alert-fixed">
+                        <div v-if="!this.search(this.role, this.form) || form.hasMessage()" class="alert alert-sticky" :class="{'alert-danger': form.status != 200, 'alert-success': form.status == 200, 'alert-dark': !form.hasMessage()}">
                             <div class="d-flex">
-                                <p class="p-1">Heads up — you have unsaved changes!</p>
+                                <p class="p-1" v-if="form.hasMessage()">Woah! — {{ form.hasMessage() }}</p>
+                                <p class="p-1" v-else>Heads up — you have unsaved changes!</p>
 
                                 <!-- Submit Button -->
                                 <div class="ml-auto">
@@ -157,6 +160,20 @@
 
 		methods: {
             /**
+             * Submit the Roles form
+             *
+             * @return  {null}
+             */
+			createOrUpdate() {
+                if (this.form.id === 0) {
+				    this.create()
+
+                    return true
+                }
+
+                this.update(this.role.id)
+			},
+            /**
              * Fetch the roles
              *
              * @return  {null}
@@ -176,12 +193,53 @@
 			async fetchRole(id = false) {
 				const { data, status } = await this.form.get(`/api/v1/role/${id}`, {})
 
-                if (status == 200) {
+                if (status == 200 && data) {
                     this.setRole(data)
                 } else {
                     this.$router.push({ name: 'admin.role.edit', params: { id: 1 } })
                 }
 			},
+            /**
+             * Create a role
+             *
+             * @return  {null}
+             */
+            async create() {
+                const { data, status } = await this.form.post(`/api/v1/role/create`)
+
+                if (status == 200) {
+                    this.fetchRoles()
+                    this.$router.push({ name: 'admin.role.edit', params: { id: data.id } })
+                }
+            },
+            /**
+             * Update a role
+             *
+             * @return  {null}
+             */
+            async update(id = null) {
+                const { data, status } = await this.form.patch(`/api/v1/role/${id}/update`)
+
+                if (status == 200) {
+                    this.setRole(data)
+                    this.fetchRoles()
+                }
+            },
+            /**
+             * Remove a role
+             *
+             * @return  {null}
+             */
+            async remove(id = null) {
+                if (id === null) id = this.role.id
+                const { data, status } = await this.form.delete(`/api/v1/role/${id}/remove`)
+
+                if (status == 200) {
+                    this.fetchRoles()
+
+                    this.$router.push({ name: 'admin.role.edit', params: { id: 1 } })
+                }
+            },
             /**
              * Set the active role from the given data
              *
@@ -288,15 +346,19 @@
                     data = this.role
                 }
 
+                // reset the form
+                this.form.errors = []
+                this.form.message = null
+
 				// Fill the form with user data.
                 this.copyObject(this.form, data)
 			},
             /**
-             * Create a new role
+             * Create a new role template
              *
              * @return  {null}
              */
-            createNewRole() {
+            newRoleTemplate() {
                 const role = {
                     id: 0,
                     tag: '@new-role',
@@ -311,27 +373,6 @@
 
                 this.resetForm(this.role)
                 this.$router.push({ name: 'admin.role.edit', params: { id: 0 } })
-            },
-            /**
-             * Submit the Roles form
-             *
-             * @return  {null}
-             */
-			createOrUpdate() {
-                if (this.form.id === 0) {
-				    this.create()
-
-                    return true
-                }
-
-                this.update()
-			},
-            create() {
-                console.log('create')
-            },
-            update() {
-                //const { data } = await this.form.get(`/api/v1/role/${id}`, {})
-                console.log('update')
             }
 		},
 
@@ -389,7 +430,7 @@
 	position: relative;
 	height: 100%;
 }
-.alert-fixed {
+.alert-sticky {
     position: sticky;
     bottom: 30px;
     padding: 10px;

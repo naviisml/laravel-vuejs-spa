@@ -27,7 +27,6 @@ class Role extends Model
      */
     protected $guarded = [
 		'id',
-		'tag',
 	];
 
     /**
@@ -36,6 +35,7 @@ class Role extends Model
      * @var array
      */
     protected $fillable = [
+		'tag',
 		'displayname',
         'permissions',
         'override',

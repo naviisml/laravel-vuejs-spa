@@ -8,7 +8,7 @@ export default async (to, from, next) => {
 	}
 
     if (user.permissions.interact != true) {
-		next({ name: '403' })
+		return next({ name: '403' })
     }
 
 	next()

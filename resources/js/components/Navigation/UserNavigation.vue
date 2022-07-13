@@ -72,17 +72,17 @@
 					<!-- Content -->
 					<template v-slot:dropdown-content>
 						<ul class="nav-dropdown-items">
-							<li class="nav-item">
+							<li v-if="user.permissions['user.edit-password'] == true" class="nav-item">
 								<router-link class="nav-link" :to="{ name: 'user.edit-profile' }" >
 									Profile
 								</router-link>
 							</li>
-							<li class="nav-item">
+							<li v-if="user.permissions['user.edit-password'] == true" class="nav-item">
 								<router-link class="nav-link" :to="{ name: 'user.edit-password' }" >
 									Password
 								</router-link>
 							</li>
-							<li class="nav-item">
+							<li v-if="user.permissions['user.user-logs'] == true" class="nav-item">
 								<router-link class="nav-link" :to="{ name: 'user.user-logs' }" >
 									Logs
 								</router-link>

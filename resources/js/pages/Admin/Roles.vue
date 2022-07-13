@@ -324,13 +324,12 @@
 		}),
 
 		watch: {
-			"$route.params.id": function (id) {
-                if (this.role && this.role.id == id) return;
+            async $route(to, from) {
+                if (to.name !== 'admin.role.edit' || (this.role && this.role.id == to.params.id)) return
 
                 this.role = null
-
-                this.$nextTick(() => this.fetchRole(id))
-			}
+                this.$nextTick(() => this.fetchRole(to.params.id))
+            },
 		}
 	}
 </script>

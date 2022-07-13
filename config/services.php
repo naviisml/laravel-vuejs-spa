@@ -41,6 +41,11 @@ return [
         'redirect' => env('DISCORD_REDIRECT_URI', '/api/v1/oauth/discord/callback'),
     ],
 
+    'steam' => [
+        'api_key' => env('STEAM_API_KEY'),
+        'redirect' => env('DISCORD_REDIRECT_URI', '/api/v1/openid/steam/callback'),
+    ],
+
     'example' => [
         'client_id' => env('EXAMPLE_CLIENT_ID'),
         'client_secret' => env('EXAMPLE_CLIENT_SECRET'),

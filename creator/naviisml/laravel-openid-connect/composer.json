@@ -1,0 +1,18 @@
+{
+    "name": "naviisml/laravel-openid-connect",
+    "version": "1.1",
+    "description": "A Laravel OpenID Connect package",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Naviisml\\Laravel\\OpenID\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Navi",
+            "email": "mailvoornavi@gmail.com"
+        }
+    ],
+    "require": {}
+}

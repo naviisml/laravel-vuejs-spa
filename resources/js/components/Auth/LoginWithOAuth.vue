@@ -1,12 +1,12 @@
 <template>
-	<v-button v-if="OAuth" class="btn btn-block btn-outline ms-auto" type="button" @click="login" :loading="loading">
+	<v-button v-if="driver" class="btn btn-block btn-outline ms-auto" type="button" @click="login" :loading="loading">
 		<slot name="label">
 			<div class="d-flex flex-row justify-content-center">
 				<div class="mr-2 pt-1" v-if="loading == false">
-					<i class="fab fa-discord"></i>
+					<i class="fab" :class="`fa-${driver}`"></i>
 				</div>
 
-				<p>Continue with Discord</p>
+				<p>Continue with {{ driver }}</p>
 			</div>
 		</slot>
 	</v-button>
@@ -15,10 +15,6 @@
 <script>
 	export default {
 		name: 'LoginWithOauth',
-
-		computed: {
-			OAuth: () => '1956444dfg4337ea65477d2aeb74b8dgdgff1a8e4eee64f70255fb63dbeju65db5447d551e5c'
-		},
 
 		props: {
             driver: {

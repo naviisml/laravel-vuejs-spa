@@ -1,6 +1,7 @@
 <template>
 	<div class="container py-5">
 		<div class="row">
+            <div class="col-md-3"></div>
 			<div class="col-md-6">
 				<div class="card">
 					<div class="card-content">
@@ -23,9 +24,10 @@
 							<button class="btn btn-primary btn-block my-3" type="submit">Sign In</button>
 						</form>
 
-                        <login-with-steam class=" my-3" />
+                        <p class="text-center text-muted">OR</p>
 
-                        <login-with-discord class=" my-3" />
+                        <login-with-openid driver="steam" class="my-3" />
+                        <login-with-oauth driver="discord" class="my-3" />
 					</div>
 				</div>
 			</div>
@@ -35,19 +37,12 @@
 
 <script>
 	import Form from '../../utils/vue-form'
-    import LoginWithSteam from '../../components/LoginWithSteam'
-    import LoginWithDiscord from '../../components/Auth/LoginWithDiscord'
 
 	export default {
 		name: 'Login',
 		guards: [
 			'guest'
 		],
-
-        components: {
-            LoginWithSteam,
-            LoginWithDiscord
-        },
 
 		data() {
 			return {

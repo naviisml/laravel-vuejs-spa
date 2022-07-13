@@ -1,5 +1,5 @@
 <template>
-	<v-button v-if="discordAuth" class="btn btn-block btn-outline ms-auto" type="button" @click="login" :loading="loading">
+	<v-button v-if="OAuth" class="btn btn-block btn-outline ms-auto" type="button" @click="login" :loading="loading">
 		<slot name="label">
 			<div class="d-flex flex-row justify-content-center">
 				<div class="mr-2 pt-1" v-if="loading == false">
@@ -14,14 +14,17 @@
 
 <script>
 	export default {
-		name: 'LoginWithdiscord',
+		name: 'LoginWithOauth',
 
 		computed: {
-			discordAuth: () => '1956444dfg4337ea65477d2aeb74b8dgdgff1a8e4eee64f70255fb63dbeju65db5447d551e5c',
-			url: () => '/api/v1/oauth/discord'
+			OAuth: () => '1956444dfg4337ea65477d2aeb74b8dgdgff1a8e4eee64f70255fb63dbeju65db5447d551e5c'
 		},
 
 		props: {
+            driver: {
+                type: String,
+                default: ''
+            },
 			label: {
 				type: String,
 				default: ''
@@ -54,6 +57,8 @@
 				const newWindow = openWindow('', 'Login')
 
 				let checkWindow = setInterval(() => {
+				    this.loading = true
+
 					if(newWindow.closed) {
 						clearInterval(checkWindow)
 						this.loading = false
@@ -61,7 +66,7 @@
 				}, 1000)
 
 				const url = await this.$store.dispatch('auth/fetchOAuthUrl', {
-					provider: 'discord'
+					provider: this.driver
 				})
 
 				this.loading = true

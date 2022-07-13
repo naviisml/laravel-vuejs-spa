@@ -100,11 +100,11 @@ class RoleController extends Controller
 		]);
 
 		// Log the action
-		$user->log("admin.role.assign", [
+		$user->log("role.assign", [
 			"user_id" => $target->id,
 			"target_id" => $target->id,
 			"role" => $role->tag,
-		]);
+		], $target->id);
 
 		return response()->json(['message' => 'Assigned role #' . $target->id]);
 	}
@@ -139,11 +139,11 @@ class RoleController extends Controller
 		$role = $target->roles()->where('id', $role_id)->first();
 
 		// Log the action
-		$user->log("admin.role.delete", [
+		$user->log("role.delete", [
 			"user_id" => $target->id,
 			"target_id" => $target->id,
 			"role" => $role->role,
-		]);
+		], $target->id);
 
 		// Delete the role
 		$role->delete();

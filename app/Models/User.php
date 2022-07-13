@@ -176,7 +176,7 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function logs(){
-        return $this->hasMany(Log::class);
+        return $this->hasMany(Log::class)->orWhere('target_id', $this->id);
     }
 
     /**

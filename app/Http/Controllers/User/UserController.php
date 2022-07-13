@@ -101,9 +101,7 @@ class UserController extends Controller
         $target->update($request->only('email', 'primary_role'));
 
 		// Log the action
-		$user->log(($logName = ($user->hasPermission('admin') && $user != $target) ? "admin.profile.update" : "profile.update"), [
-			"user_id" => $target->id,
-		], $target->id);
+		$user->log(("profile.update"), [], $target->id);
 
         return response()->json($target);
     }

@@ -80,4 +80,12 @@ class Log extends Model
     {
         return $this->belongsTo(User::class, 'id', 'user_id');
     }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function target()
+    {
+        return $this->belongsTo(User::class, 'id', 'target_id');
+    }
 }

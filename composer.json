@@ -8,6 +8,10 @@
         {
             "type": "path",
             "url": "creator/naviisml/laravel-openid-connect"
+        },
+        {
+            "type": "path",
+            "url": "creator/naviisml/laravel-socialite-extended"
         }
     ],
     "require": {

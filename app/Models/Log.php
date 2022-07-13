@@ -29,6 +29,7 @@ class Log extends Model
      */
     protected $fillable = [
 		'user_id',
+		'target_id',
 		'ip_address',
         'metadata',
 		'action',
@@ -78,5 +79,13 @@ class Log extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'id', 'user_id');
+    }
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function target()
+    {
+        return $this->belongsTo(User::class, 'id', 'target_id');
     }
 }

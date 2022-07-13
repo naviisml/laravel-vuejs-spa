@@ -56,12 +56,6 @@ export default [
 		component: Page('Admin/Roles'),
 	},
 
-	{
-		path: '/admin/role/create',
-        name: 'admin.role.create',
-		component: Page('Admin/Roles'),
-	},
-
 	// Users Routes...
 	{
 		path: '/admin/users',

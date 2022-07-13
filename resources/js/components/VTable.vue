@@ -9,7 +9,7 @@
 			<tbody>
 				<tr v-for="(entry) in result">
 					<td v-for="(type) in data">
-						{{ entry[type] }}
+                        {{ truncate(entry[type], 40, '...')}}
 					</td>
 				</tr>
 			</tbody>
@@ -68,6 +68,29 @@
 		},
 
 		methods: {
+            /**
+             * Load the previous page
+             *
+             * @return  {null}
+             */
+			previousPage() {
+				this.setPage(this.currentPage - 1)
+			},
+            /**
+             * Load the next page
+             *
+             * @return  {null}
+             */
+			nextPage() {
+				this.setPage(this.currentPage + 1)
+			},
+            /**
+             * Get the data from a specific endpoint
+             *
+             * @param   {integer}  page
+             *
+             * @return  {null}
+             */
 			async getData (page) {
 				const url = this.endpoint + '?page=' + page
 				const { data } = await axios.get(url)
@@ -76,18 +99,39 @@
 				this.currentPage = data.current_page
 				this.last_page = data.last_page
 			},
-			previousPage() {
-				this.setPage(this.currentPage - 1)
-			},
-			nextPage() {
-				this.setPage(this.currentPage + 1)
-			},
+            /**
+             * Set the current page
+             *
+             * @param   {integer}  page
+             *
+             * @return  {null}
+             */
 			setPage(page) {
 				if (page <= 0 || page > this.last_page) {
 					return false, console.error(`Page ${page} doesn't exist.`)
 				}
+
 				this.getData(page)
 			},
-		}
+            /**
+             * Truncate a given string, array or object to add a suffix of some sort if the
+             * given string, array or object reaches a certain length.
+             *
+             * @param   {string|object|array}  value
+             * @param   {string}  stop
+             * @param   {string}  clamp
+             *
+             * @return  {string}
+             */
+            truncate(value, stop, clamp) {
+                if (typeof value === 'array' || typeof value === 'object') {
+                    value = JSON.stringify(value)
+                }
+
+                const text = value.toString()
+
+                return text.slice(0, stop) + (stop < text.length ? clamp || '...' : '')
+            }
+		},
 	}
 </script>

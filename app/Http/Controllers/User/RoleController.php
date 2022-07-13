@@ -10,6 +10,11 @@ use App\Models\Role;
 
 class RoleController extends Controller
 {
+    /**
+     * @var array
+     */
+    protected $role;
+
 	/**
 	 * Return the roles
 	 *
@@ -26,19 +31,20 @@ class RoleController extends Controller
 			return abort(401);
 		}
 
-		$roles = Role::select(['id', 'displayname', 'tag'])->get();
+		$this->roles = Role::select(['id', 'displayname', 'tag'])->get();
 
-        if (!$roles) {
+        if (!$this->roles) {
             return abort(404);
         }
 
-		return $roles;
+		return $this->roles;
 	}
 
 	/**
 	 * Return a specific role
 	 *
 	 * @param   Request  $request
+     * @param   integer   $id
 	 *
 	 * @return  App\Models\Role
 	 */
@@ -51,14 +57,150 @@ class RoleController extends Controller
 			return abort(401);
 		}
 
-		$role = Role::where('id', $id)->first();
+		$this->role = Role::where('id', $id)->first();
 
-        if (!$role) {
+        if (!$this->role) {
             return abort(404);
         }
 
-		return $role;
+		return $this->role;
 	}
+
+	/**
+	 * Create a role
+	 *
+	 * @param   Request  $request
+	 *
+	 * @return  App\Models\Role
+	 */
+    public function create(Request $request)
+    {
+		$user = $request->user();
+
+		// check if we have the permissions to update other users (if neccesary)
+		if (!$user->hasPermissions(['admin.roles'])) {
+			return abort(401);
+		}
+
+        // validate the request input
+        $this->validator($request);
+
+		// Log the action
+		$user->log("role.create", [
+            'tag' => $request->tag
+        ]);
+
+        // update the account
+        $this->role = Role::create([
+            'displayname' => $request->displayname,
+            'tag' => $request->tag,
+            'permissions' => $request->permissions,
+            'override' => $request->override,
+            'default' => false
+        ]);
+
+        return response()->json($this->role);
+    }
+
+	/**
+	 * Update a role
+	 *
+	 * @param   Request  $request
+     * @param   integer   $id
+	 *
+	 * @return  App\Models\Role
+	 */
+    public function update(Request $request, $id)
+    {
+		$user = $request->user();
+
+		// check if we have the permissions to update other users (if neccesary)
+		if (!$user->hasPermissions(['admin.roles'])) {
+			return abort(401);
+		}
+
+        // check if the role exists
+		$this->role = Role::where('id', $id)->first();
+
+        if (!$this->role) {
+            return abort(404);
+        }
+
+        // validate the request input
+        $this->validator($request);
+
+		// Log the action
+		$user->log("role.update", [
+            'tag' => $request->tag
+        ]);
+
+        // update the account
+        $this->role->update($request->only('displayname', 'tag', 'permissions', 'override'));
+
+        return response()->json($this->role);
+    }
+
+    /**
+     * Delete a Role
+     *
+     * @param   Request  $request
+     * @param   integer   $id
+     *
+     * @return  void
+     */
+    public function remove(Request $request, $id)
+    {
+		$user = $request->user();
+
+		// check if we have the permissions to update other users (if neccesary)
+		if (!$user->hasPermissions(['admin.roles'])) {
+			return abort(401);
+		}
+
+        // check if the role exists
+		$this->role = Role::where('id', $id)->first();
+
+        if (!$this->role) {
+            return abort(404);
+        }
+
+        // validate the request input
+        $this->validator($request);
+
+		// Log the action
+		$user->log("role.remove", [
+            'tag' => $request->tag
+        ]);
+
+        // update the account
+        $this->role->delete();
+
+        return abort(200);
+    }
+
+    /**
+     * Validate the form data
+     *
+     * @param   Request  $request
+     *
+     * @return  Validator
+     */
+    protected function validator(Request $request)
+    {
+        return $this->validate($request, [
+            'displayname' => 'required|string',
+            'tag' => [
+                'required', 'unique:roles,tag' . ($this->role ? ",{$this->role->id}" : ''),
+                function($attribute, $value, $fail) {
+                    if ($this->role && $this->role->default == true && $this->role->tag != $value) {
+                        $fail("This role is protected, so the role tag cannot be changed.");
+                    }
+                }
+            ],
+            'permissions' => 'required|array',
+            'override' => 'required',
+        ]);
+    }
 
 	/**
 	 * Assign a new role to the user
@@ -87,24 +229,22 @@ class RoleController extends Controller
 		}
 
 		// check if the role exists
-		$role = Role::where(['id' => $role_id])->first();
+		$this->role = Role::where(['id' => $role_id])->first();
 
-		if (!$role) {
+		if (!$this->role) {
 			return abort(404);
 		}
 
 		// Assign the user role
 		$user_role = UserRole::create([
 			'user_id' => $target->id,
-			'role' => $role->tag
+			'role' => $this->role->tag
 		]);
 
 		// Log the action
-		$user->log("admin.role.assign", [
-			"user_id" => $target->id,
-			"target_id" => $target->id,
-			"role" => $role->tag,
-		]);
+		$user->log("role.assign", [
+			"role" => $this->role->tag,
+		], $target->id);
 
 		return response()->json(['message' => 'Assigned role #' . $target->id]);
 	}
@@ -117,7 +257,7 @@ class RoleController extends Controller
 	 *
 	 * @return  json
 	 */
-	public function delete(Request $request)
+	public function unassign(Request $request)
 	{
 		$user = $request->user();
 		$id = $request->input('user_id');
@@ -136,17 +276,15 @@ class RoleController extends Controller
 		}
 
 		// Get the role
-		$role = $target->roles()->where('id', $role_id)->first();
+		$this->role = $target->roles()->where('id', $role_id)->first();
 
 		// Log the action
-		$user->log("admin.role.delete", [
-			"user_id" => $target->id,
-			"target_id" => $target->id,
-			"role" => $role->role,
-		]);
+		$user->log("role.unassign", [
+			"role" => $this->role->role,
+		], $target->id);
 
 		// Delete the role
-		$role->delete();
+		$this->role->delete();
 
 		return response()->json(['message' => 'Deleted role #' . $target->id]);
 	}

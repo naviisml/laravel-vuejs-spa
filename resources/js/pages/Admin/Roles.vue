@@ -6,7 +6,7 @@
                 <strong class="title d-flex">
                     Roles
                     <div class="ml-auto">
-                        <a class="tooltip-left" aria-label="Create new role" @click.prevent="createNewRole">
+                        <a class="tooltip-left" aria-label="Create new role" @click.prevent="newRoleTemplate">
                             <i class="far fa-plus"></i>
                         </a>
                     </div>
@@ -38,11 +38,6 @@
 
                     <!-- Form -->
                     <form @submit.prevent="createOrUpdate">
-                        <!-- Alert -->
-                        <div v-if="!this.search(this.role, this.form)" class="alert alert-danger">
-                            You have unsaved changes!
-                        </div>
-
                         <!-- Information -->
                         <div class="card my-3">
                             <div class="card-content">
@@ -59,7 +54,7 @@
                                 <!-- tag -->
                                 <div class="form-group py-3">
                                     <label>Tag</label>
-                                    <input class="form-control" v-model="form.tag" @keyup="parseRoleTag" type="text" name="text">
+                                    <input class="form-control" v-model="form.tag" @keyup="parseRoleTag" type="text" name="text" :disabled="role.default">
                                     <p class="text-muted">Lorem ipsum dolor sit amet, consectetur adipiscing elit</p>
                                 </div>
                             </div>
@@ -82,7 +77,7 @@
                                 </thead>
                                 <tbody>
                                     <tr v-for="(key, value) in permissions" :key="value">
-                                        <td>{{ $t(`permissions.${value}.title`) }} <i class="text-muted">{{ $t(`permissions.${value}.description`) }}</i></td>
+                                        <td>{{ $t(`permissions.${value.replace(/\./g, "-")}.title`) }} <i class="text-muted">{{ $t(`permissions.${value.replace(/\./g, "-")}.description`) }}</i></td>
                                         <td>
                                             <select class="form-control p-2" v-model="form.permissions[value]">
                                                 <option :value="true">Yes</option>
@@ -94,10 +89,24 @@
                             </table>
                         </div>
 
-                        <!-- Submit Button -->
-                        <v-button class="my-3">
-                            Update
-                        </v-button>
+                        <div class="btn btn-danger" @click="remove()">Delete</div>
+
+                        <!-- Alert -->
+                        <div v-if="!this.search(this.role, this.form) || form.hasMessage()" class="alert alert-sticky" :class="{'alert-danger': form.status != 200, 'alert-success': form.status == 200, 'alert-dark': !form.hasMessage()}">
+                            <div class="d-flex">
+                                <p class="p-1" v-if="form.hasMessage()">Woah! — {{ form.hasMessage() }}</p>
+                                <p class="p-1" v-else>Heads up — you have unsaved changes!</p>
+
+                                <!-- Submit Button -->
+                                <div class="ml-auto">
+                                    <a @click.prevent="setRole(this.role)" class="mx-3">Reset</a>
+
+                                    <v-button class="btn-success btn-small">
+                                        Save Changes
+                                    </v-button>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </section>
             </transition>
@@ -151,6 +160,20 @@
 
 		methods: {
             /**
+             * Submit the Roles form
+             *
+             * @return  {null}
+             */
+			createOrUpdate() {
+                if (this.form.id === 0) {
+				    this.create()
+
+                    return true
+                }
+
+                this.update(this.role.id)
+			},
+            /**
              * Fetch the roles
              *
              * @return  {null}
@@ -170,21 +193,72 @@
 			async fetchRole(id = false) {
 				const { data, status } = await this.form.get(`/api/v1/role/${id}`, {})
 
-                if (status == 200) {
-                    this.role = data
-
-                    // sync the permission settings with the form data
-                    Object.keys(this.permissions).forEach(key => {
-                        if (!this.role.permissions[key]) {
-                            this.role.permissions[key] = false
-                        }
-                    })
-
-                    this.resetForm(this.role)
+                if (status == 200 && data) {
+                    this.setRole(data)
                 } else {
                     this.$router.push({ name: 'admin.role.edit', params: { id: 1 } })
                 }
 			},
+            /**
+             * Create a role
+             *
+             * @return  {null}
+             */
+            async create() {
+                const { data, status } = await this.form.post(`/api/v1/role/create`)
+
+                if (status == 200) {
+                    this.fetchRoles()
+                    this.$router.push({ name: 'admin.role.edit', params: { id: data.id } })
+                }
+            },
+            /**
+             * Update a role
+             *
+             * @return  {null}
+             */
+            async update(id = null) {
+                const { data, status } = await this.form.patch(`/api/v1/role/${id}/update`)
+
+                if (status == 200) {
+                    this.setRole(data)
+                    this.fetchRoles()
+                }
+            },
+            /**
+             * Remove a role
+             *
+             * @return  {null}
+             */
+            async remove(id = null) {
+                if (id === null) id = this.role.id
+                const { data, status } = await this.form.delete(`/api/v1/role/${id}/remove`)
+
+                if (status == 200) {
+                    this.fetchRoles()
+
+                    this.$router.push({ name: 'admin.role.edit', params: { id: 1 } })
+                }
+            },
+            /**
+             * Set the active role from the given data
+             *
+             * @param   {object}  data
+             *
+             * @return  {null}
+             */
+            setRole(data) {
+                this.role = data
+
+                // sync the permission settings with the form data
+                Object.keys(this.permissions).forEach(key => {
+                    if (!this.role.permissions[key]) {
+                        this.role.permissions[key] = false
+                    }
+                })
+
+                this.resetForm(this.role)
+            },
             /**
              * Check if the 2 given arrays are equal
              *
@@ -272,15 +346,19 @@
                     data = this.role
                 }
 
+                // reset the form
+                this.form.errors = []
+                this.form.message = null
+
 				// Fill the form with user data.
                 this.copyObject(this.form, data)
 			},
             /**
-             * Create a new role
+             * Create a new role template
              *
              * @return  {null}
              */
-            createNewRole() {
+            newRoleTemplate() {
                 const role = {
                     id: 0,
                     tag: '@new-role',
@@ -290,32 +368,11 @@
                     default: 0,
                 }
 
-                this.role = role
+                this.role = { ...role }
                 this.roles = { ...this.roles, role }
 
                 this.resetForm(this.role)
                 this.$router.push({ name: 'admin.role.edit', params: { id: 0 } })
-            },
-            /**
-             * Submit the Roles form
-             *
-             * @return  {null}
-             */
-			createOrUpdate() {
-                if (this.form.id === 0) {
-				    this.create()
-
-                    return true
-                }
-
-                this.update()
-			},
-            create() {
-                console.log('create')
-            },
-            update() {
-                //const { data } = await this.form.get(`/api/v1/role/${id}`, {})
-                console.log('update')
             }
 		},
 
@@ -324,13 +381,18 @@
 		}),
 
 		watch: {
-			"$route.params.id": function (id) {
-                if (this.role && this.role.id == id) return;
+            async $route(to, from) {
+                if (to.name !== 'admin.role.edit' || (this.role && this.role.id == to.params.id)) return
 
                 this.role = null
 
-                this.$nextTick(() => this.fetchRole(id))
-			}
+                // test
+                if (this.roles.role && to.params.id === '0') {
+                    return this.$nextTick(() => this.setRole(this.roles.role))
+                }
+
+                return this.$nextTick(() => this.fetchRole(to.params.id))
+            },
 		}
 	}
 </script>
@@ -367,5 +429,10 @@
     grid-template-columns: repeat(12, calc(100% / 12));
 	position: relative;
 	height: 100%;
+}
+.alert-sticky {
+    position: sticky;
+    bottom: 30px;
+    padding: 10px;
 }
 </style>

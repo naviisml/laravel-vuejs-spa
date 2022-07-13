@@ -149,10 +149,11 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
 	 *
 	 * @return  App\Models\User\Log
 	 */
-	public function log($action = null, $metadata = [])
+	public function log($action = null, $metadata = [], $target_id = null)
 	{
 		return Log::create([
 			'user_id' => $this->id,
+            'target_id' => $target_id ?? $this->id,
 			'ip_address' => $this->getIp(),
 			'action' => $action,
 			'metadata' => json_encode($metadata),
@@ -174,10 +175,9 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-	public function logs()
-	{
-		return $this->hasMany(Log::class, 'user_id', 'id');
-	}
+    public function logs(){
+        return $this->hasMany(Log::class)->orWhere('target_id', $this->id);
+    }
 
     /**
      * Get the oauth providers.

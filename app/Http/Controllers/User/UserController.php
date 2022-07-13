@@ -94,16 +94,21 @@ class UserController extends Controller
 			return abort(404);
 		}
 
+        // validate the request input
         $this->validate($request, [
             'email' => 'required|email|unique:users,email,' . $target->id
         ]);
 
-        $target->update($request->only('email', 'primary_role'));
-
 		// Log the action
-		$user->log(($logName = ($user->hasPermission('admin') && $user != $target) ? "admin.profile.update" : "profile.update"), [
-			"user_id" => $target->id,
-		]);
+		$user->log(("profile.update"), [
+            'email' => [
+                'old' => $target->email,
+                'new' => $request->email
+            ]
+        ], $target->id);
+
+        // update the account
+        $target->update($request->only('email'));
 
         return response()->json($target);
     }

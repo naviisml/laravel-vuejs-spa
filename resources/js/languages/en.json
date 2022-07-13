@@ -5,6 +5,58 @@
         "interact": {
             "title": "Interact",
             "description": "Interact with the website"
+        },
+        "user-user-logs": {
+            "title": "user.user-logs",
+            "description": "user.user-logs.description"
+        },
+        "user-edit-profile": {
+            "title": "user.edit-profile",
+            "description": "user.edit-profile.description"
+        },
+        "user-edit-password": {
+            "title": "user.edit-password",
+            "description": "user.edit-password.description"
+        },
+        "admin": {
+            "title": "admin",
+            "description": "admin.description"
+        },
+        "admin-users": {
+            "title": "admin.users",
+            "description": "admin.users.description"
+        },
+        "admin-user-get": {
+            "title": "admin.user-get",
+            "description": "admin.user-get.description"
+        },
+        "admin-user-edit": {
+            "title": "admin.user-edit",
+            "description": "admin.user-edit.description"
+        },
+        "admin-user-roles": {
+            "title": "admin.user-roles",
+            "description": "admin.user-roles.description"
+        },
+        "admin-user-roles-assign": {
+            "title": "admin.user-roles.assign",
+            "description": "admin.user-roles.assign.description"
+        },
+        "admin-user-roles-delete": {
+            "title": "admin.user-roles.delete",
+            "description": "admin.user-roles.delete.description"
+        },
+        "admin-user-logs": {
+            "title": "admin.user.logs",
+            "description": "admin.user.logs.description"
+        },
+        "admin-roles": {
+            "title": "admin.roles",
+            "description": "admin.roles.description"
+        },
+        "admin-role-edit": {
+            "title": "admin.role.edit",
+            "description": "admin.role.edit.description"
         }
     }
 }

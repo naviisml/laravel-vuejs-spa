@@ -38,11 +38,6 @@
 
                     <!-- Form -->
                     <form @submit.prevent="createOrUpdate">
-                        <!-- Alert -->
-                        <div v-if="!this.search(this.role, this.form)" class="alert alert-danger">
-                            You have unsaved changes!
-                        </div>
-
                         <!-- Information -->
                         <div class="card my-3">
                             <div class="card-content">
@@ -94,10 +89,21 @@
                             </table>
                         </div>
 
-                        <!-- Submit Button -->
-                        <v-button class="my-3">
-                            Update
-                        </v-button>
+                        <!-- Alert -->
+                        <div v-if="!this.search(this.role, this.form)" class="alert alert-dark alert-fixed">
+                            <div class="d-flex">
+                                <p class="p-1">Heads up — you have unsaved changes!</p>
+
+                                <!-- Submit Button -->
+                                <div class="ml-auto">
+                                    <a @click.prevent="setRole(this.role)" class="mx-3">Reset</a>
+
+                                    <v-button class="btn-success btn-small">
+                                        Save Changes
+                                    </v-button>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                 </section>
             </transition>
@@ -382,5 +388,10 @@
     grid-template-columns: repeat(12, calc(100% / 12));
 	position: relative;
 	height: 100%;
+}
+.alert-fixed {
+    position: sticky;
+    bottom: 30px;
+    padding: 10px;
 }
 </style>

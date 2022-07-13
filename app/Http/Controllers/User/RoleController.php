@@ -101,8 +101,6 @@ class RoleController extends Controller
 
 		// Log the action
 		$user->log("role.assign", [
-			"user_id" => $target->id,
-			"target_id" => $target->id,
 			"role" => $role->tag,
 		], $target->id);
 
@@ -140,8 +138,6 @@ class RoleController extends Controller
 
 		// Log the action
 		$user->log("role.delete", [
-			"user_id" => $target->id,
-			"target_id" => $target->id,
 			"role" => $role->role,
 		], $target->id);
 

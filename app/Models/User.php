@@ -153,7 +153,7 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
 	{
 		return Log::create([
 			'user_id' => $this->id,
-            'target_id' => $target_id,
+            'target_id' => $target_id || $this->id,
 			'ip_address' => $this->getIp(),
 			'action' => $action,
 			'metadata' => json_encode($metadata),

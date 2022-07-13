@@ -1,5 +1,5 @@
 <template>
-	<v-button v-if="steamAuth" class="btn btn-block btn-outline ms-auto" type="button" @click="login" :loading="loading">
+	<v-button v-if="openIDConnect" class="btn btn-block btn-outline ms-auto" type="button" @click="login" :loading="loading">
 		<slot name="label">
 			<div class="d-flex flex-row justify-content-center">
 				<div class="mr-2 pt-1" v-if="loading == false">
@@ -14,18 +14,24 @@
 
 <script>
 	export default {
-		name: 'LoginWithsteam',
+		name: 'LoginWithOpenid',
 
 		computed: {
-			steamAuth: () => '19564444337ea65477d2aeb74b8f1a8e4eee64f70255fb63dbedb5447d551e5c',
-			url: () => '/api/v1/openid/steam'
+			openIDConnect: () => '19564444337ea65477d2aeb74b8f1a8e4eee64f70255fb63dbedb5447d551e5c'
 		},
 
 		props: {
+            driver: {
+                type: String,
+                default: ''
+            },
 			label: {
 				type: String,
 				default: ''
-			}
+			},
+            callback: {
+                type: Function
+            }
 		},
 
 		data() {
@@ -47,6 +53,8 @@
 				const newWindow = openWindow('', 'Login')
 
 				let checkWindow = setInterval(() => {
+				    this.loading = true
+
 					if(newWindow.closed) {
 						clearInterval(checkWindow)
 						this.loading = false
@@ -54,7 +62,7 @@
 				}, 1000)
 
 				const url = await this.$store.dispatch('auth/fetchOpenIDUrl', {
-					provider: 'steam'
+					provider: this.driver
 				})
 
 				this.loading = true
@@ -65,11 +73,17 @@
 				// check hostnames??
 				this.loading = false
 
+                if (!e.data.token) {
+                    return false
+                }
+
 				this.$store.dispatch('auth/saveToken', {
 					token: e.data.token
 				})
 
-				this.$router.push({ name: 'user.user-profile' })
+                if (this.callback) {
+                    return this.callback()
+                }
 			}
 		}
 	}

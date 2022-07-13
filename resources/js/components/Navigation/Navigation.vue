@@ -1,14 +1,7 @@
 <template>
-	<nav class="nav-top">
+	<nav class="nav-top nav-transparent">
 		<div class="container d-flex py-2">
-			<h3 class="nav-branding pt-2">Branding</h3>
-
 			<ul class="nav-list ml-auto">
-				<li class="nav-item">
-					<router-link class="nav-link" :to="{ name: 'home' }">
-						Home
-					</router-link>
-				</li>
 				<span v-if="auth">
 					<li class="nav-item">
 						<router-link class="nav-link color-primary" :to="{ name: 'user.user-profile' }">

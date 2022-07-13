@@ -90,11 +90,4 @@ export default [
 			}
 		]
 	},
-
-    // experimental: link discord and steam to your account
-    {
-		path: '/link',
-		name: 'link',
-		component: Page('User/LinkPage')
-	},
 ]

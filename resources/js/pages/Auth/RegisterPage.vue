@@ -1,6 +1,7 @@
 <template>
 	<div class="container py-5">
 		<div class="row">
+            <div class="col-md-3"></div>
 			<div class="col-md-6">
 				<div class="card">
 					<div class="card-content">
@@ -38,13 +39,18 @@
 							</div>
 
 							<!-- TOS -->
-							<div class="form-group py-2">
+							<div class="form-group pt-3 pb-2">
 								<input type="checkbox" id="tos" value="tos">
 								<label for="tos" class="text-muted">I agree with the <span class="text-primary">Terms</span> and <span class="text-primary">Privacy</span> policy</label>
 							</div>
 
-							<button class="btn btn-primary btn-block" type="submit">Register</button>
+							<button class="btn btn-primary btn-block my-3" type="submit">Register</button>
 						</form>
+
+                        <p class="text-center text-muted">OR</p>
+
+                        <login-with-openid driver="steam" class="my-3" />
+                        <login-with-oauth driver="discord" class="my-3" />
 					</div>
 				</div>
 			</div>

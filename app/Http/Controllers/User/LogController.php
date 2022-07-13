@@ -41,7 +41,7 @@ class LogController extends Controller
 		}
 
 		// Get the logs
-		$logs = $target->logs()->orderBy('id', 'DESC')->paginate(30);
+        $logs = $target->logs()->orderBy('id', 'DESC')->paginate(20);
 
         return response()->json($logs);
     }

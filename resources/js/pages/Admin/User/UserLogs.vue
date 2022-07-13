@@ -2,7 +2,7 @@
 	<!-- Logs -->
 	<section class="container py-5">
 		<div class="card">
-			<v-table :endpoint="'/api/v1/user/' + id + '/logs'" :page="page" :data="['action', 'metadata', 'ip_filtered', 'created_at']"></v-table>
+			<v-table :endpoint="'/api/v1/user/' + id + '/logs'" :page="page" :data="['action', 'metadata', 'user_id', 'target_id', 'ip_filtered', 'created_at']"></v-table>
 		</div>
 	</section>
 </template>

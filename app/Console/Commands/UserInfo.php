@@ -2,26 +2,25 @@
 
 namespace App\Console\Commands;
 
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Console\Command;
-use App\Models\UserRole;
 use App\Models\User;
-use App\Models\Role;
 
-class RoleAssign extends Command
+class UserInfo extends Command
 {
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'role:assign {user_id?}';
+    protected $signature = 'user:info {user_id?}';
 
     /**
      * The console command description.
      *
      * @var string
      */
-    protected $description = 'Assign a role to a user';
+    protected $description = 'Show the user info';
 
     /**
      * Create a new command instance.
@@ -50,25 +49,26 @@ class RoleAssign extends Command
             while (!($user = $this->askUser())) {}
         }
 
-        // retrieve the roles
-		$roles = $this->getRoles();
+        // return the user info
+        $array = $user->toArray();
 
-		$role = $this->choice('Choose the role', $roles);
-
-		if ($user->roles()->where('role', $role)->first()) {
-			$this->error('User already owns [' . $role . ']');
-			$this->newLine();
-		}
-
-		// Assign role
-		if ($this->confirm('Do you want to assign [' . $role . '] to [' . $user->username . ']?', true)) {
-			UserRole::create([
-				'user_id' => $user->id,
-				'role' => $role
-			]);
-		}
+        $this->printArray($array);
 
         return Command::SUCCESS;
+    }
+
+    protected function printArray($array = [], $prefix = "")
+    {
+        foreach($array as $key => $value) {
+            if (is_array($value)) {
+                $this->info("{$key}");
+                $prefix .= "\t";
+                $this->printArray($value, $prefix);
+                $prefix = "";
+            } else {
+                $this->info("{$prefix}{$key}: {$value}");
+            }
+        }
     }
 
     /**
@@ -108,22 +108,5 @@ class RoleAssign extends Command
         }
 
 		return false;
-	}
-
-	/**
-	 * Parse the roles correctly
-	 *
-	 * @return  array
-	 */
-	protected function getRoles()
-	{
-		$roles = Role::get();
-		$role_list = [];
-
-		foreach ($roles as $role) {
-			$role_list[] = $role->tag;
-		}
-
-		return $role_list;
 	}
 }

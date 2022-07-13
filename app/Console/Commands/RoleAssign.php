@@ -14,7 +14,7 @@ class RoleAssign extends Command
      *
      * @var string
      */
-    protected $signature = 'role:assign';
+    protected $signature = 'role:assign {user_id?}';
 
     /**
      * The console command description.
@@ -40,8 +40,17 @@ class RoleAssign extends Command
      */
     public function handle()
     {
-		$user = $this->askUser();
+        // check if the command has a user_id parameter
+        if ($user_id = $this->argument('user_id')) {
+		    $user = $this->searchUser($user_id);
+        }
 
+        // if there is no user, find one
+        if (!$user) {
+            while (!($user = $this->askUser())) {}
+        }
+
+        // retrieve the roles
 		$roles = $this->getRoles();
 
 		$role = $this->choice('Choose the role', $roles);
@@ -62,29 +71,43 @@ class RoleAssign extends Command
         return Command::SUCCESS;
     }
 
-	/**
-	 * Search for a user by email or id
-	 *
-	 * @return  App\Model\User
-	 */
+    /**
+     * Ask the 'Search for a user' question
+     *
+     * @return  App\Models\User
+     */
 	protected function askUser()
 	{
-		while (!isset($user)) {
-			$input = $this->ask('Search user by email, username or id');
-			$user = User::where('email', 'like', "%{$input}%")->orWhere('id', 'like', "%{$input}%")->orWhere('username', 'like', "%{$input}%")->first();
-			if ($user) {
-				if ($this->confirm('Do you mean ' . $user->username . '?', true)) {
-					break;
-				} else {
-					$user = null;
-				}
-			} else {
-				$this->error('Could not find any user.');
-				$this->newLine();
-			}
-		}
+        $input = $this->ask('Search user by email, username or id');
 
-		return $user;
+        if ($user = $this->searchUser($input)) {
+            if ($this->confirm("Do you mean {$user->username}?", true)) {
+                return $user;
+            }
+        }
+	}
+
+    /**
+     * Search for a user by email, username or id
+     *
+     * @return  App\Models\User
+     */
+	protected function searchUser($input = null)
+	{
+        $user = User::where('email', 'like', "%{$input}%")->orWhere('id', 'like', "%{$input}%")->orWhere('username', 'like', "%{$input}%")->first();
+
+		if (!$user) {
+            $this->error("Could not find any user by {$input}.");
+            $this->newLine();
+
+            return false;
+        }
+
+        if ($this->confirm("Do you mean {$user->username}?", true)) {
+            return $user;
+        }
+
+		return false;
 	}
 
 	/**

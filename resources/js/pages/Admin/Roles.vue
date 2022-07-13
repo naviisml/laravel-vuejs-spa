@@ -171,20 +171,30 @@
 				const { data, status } = await this.form.get(`/api/v1/role/${id}`, {})
 
                 if (status == 200) {
-                    this.role = data
-
-                    // sync the permission settings with the form data
-                    Object.keys(this.permissions).forEach(key => {
-                        if (!this.role.permissions[key]) {
-                            this.role.permissions[key] = false
-                        }
-                    })
-
-                    this.resetForm(this.role)
+                    this.setRole(data)
                 } else {
                     this.$router.push({ name: 'admin.role.edit', params: { id: 1 } })
                 }
 			},
+            /**
+             * Set the active role from the given data
+             *
+             * @param   {object}  data
+             *
+             * @return  {null}
+             */
+            setRole(data) {
+                this.role = data
+
+                // sync the permission settings with the form data
+                Object.keys(this.permissions).forEach(key => {
+                    if (!this.role.permissions[key]) {
+                        this.role.permissions[key] = false
+                    }
+                })
+
+                this.resetForm(this.role)
+            },
             /**
              * Check if the 2 given arrays are equal
              *
@@ -290,7 +300,7 @@
                     default: 0,
                 }
 
-                this.role = role
+                this.role = { ...role }
                 this.roles = { ...this.roles, role }
 
                 this.resetForm(this.role)
@@ -328,7 +338,13 @@
                 if (to.name !== 'admin.role.edit' || (this.role && this.role.id == to.params.id)) return
 
                 this.role = null
-                this.$nextTick(() => this.fetchRole(to.params.id))
+
+                // test
+                if (this.roles.role && to.params.id === '0') {
+                    return this.$nextTick(() => this.setRole(this.roles.role))
+                }
+
+                return this.$nextTick(() => this.fetchRole(to.params.id))
             },
 		}
 	}

@@ -49,8 +49,8 @@
 
                         <p class="text-center text-muted">OR</p>
 
-                        <login-with-openid driver="steam" class="my-3" />
-                        <login-with-oauth driver="discord" class="my-3" />
+                        <login-with-openid driver="steam" :callback="loginCallback" class="my-3" />
+                        <login-with-oauth driver="discord" :callback="loginCallback" class="my-3" />
 					</div>
 				</div>
 			</div>
@@ -99,7 +99,10 @@
 
 				// Redirect home.
 				this.$router.push({ name: 'user.user-profile' })
-			}
+			},
+            loginCallback() {
+				this.$router.push({ name: 'user.user-profile' })
+            }
 		}
 	}
 </script>

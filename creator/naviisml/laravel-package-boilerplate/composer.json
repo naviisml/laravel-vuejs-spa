@@ -1,0 +1,21 @@
+{
+    "name": "naviisml/laravel-package-boilerplate",
+    "version": "1.0.1",
+    "description": "A Laravel package boilerplate",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Naviisml\\Package\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Navi",
+            "email": "mailvoornavi@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1",
+        "laravel/framework": "^9.0"
+    }
+}

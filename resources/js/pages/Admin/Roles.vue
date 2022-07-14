@@ -137,19 +137,19 @@
                 }),
 				permissions: {
                     "interact": true,
-                    "user.user-logs": true,
-                    "user.edit-profile": true,
-                    "user.edit-password": true,
-                    "admin": false,
-                    "admin.users": false,
-                    "admin.user.get": false,
-                    "admin.user.edit": false,
-                    "admin.user.roles": false,
-                    "admin.user.roles.assign": false,
-                    "admin.user.roles.delete": false,
-                    "admin.user.logs": false,
-                    "admin.roles": false,
-                    "admin.role.edit": false
+                    "user.user-logs": "1",
+                    "user.edit-profile": "1",
+                    "user.edit-password": "1",
+                    "admin": "1",
+                    "admin.users": "1",
+                    "admin.user.get": "1",
+                    "admin.user.edit": "1",
+                    "admin.user.roles": "1",
+                    "admin.user.roles.assign": "1",
+                    "admin.user.roles.delete": "1",
+                    "admin.user.logs": "1",
+                    "admin.roles": "1",
+                    "admin.role.edit": "1"
                 }
 			}
 		},

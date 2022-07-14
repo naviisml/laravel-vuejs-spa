@@ -44,8 +44,7 @@ class UserInfo extends Command
 		    $user = $this->searchUser($user_id);
         }
 
-        // if there is no user, find one
-        if (!$user) {
+        if (!isset($user) || !$user) {
             while (!($user = $this->askUser())) {}
         }
 
@@ -81,9 +80,7 @@ class UserInfo extends Command
         $input = $this->ask('Search user by email, username or id');
 
         if ($user = $this->searchUser($input)) {
-            if ($this->confirm("Do you mean {$user->username}?", true)) {
-                return $user;
-            }
+            return $user;
         }
 	}
 

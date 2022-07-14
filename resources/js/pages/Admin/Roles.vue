@@ -81,7 +81,8 @@
                                         <td>
                                             <select class="form-control p-2" v-model="form.permissions[value]">
                                                 <option :value="true">Yes</option>
-                                                <option :value="role.permissions[value] ? '0' : false" :selected="!role.permissions || !role.permissions[value]">No</option>
+                                                <option value="1">Inherit</option>
+                                                <option value="0">No</option>
                                             </select>
                                         </td>
                                     </tr>

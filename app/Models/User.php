@@ -95,7 +95,7 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
 		foreach ($roles as $role) {
 			if (isset($role['data']) && is_array($role['data']['permissions']))
 				$permissions = array_merge($permissions ?? [], array_filter($role['data']['permissions'], function($v, $k) {
-                    return $v != "0";
+                    return $v !== "inherit";
                 }, ARRAY_FILTER_USE_BOTH));
 		}
 

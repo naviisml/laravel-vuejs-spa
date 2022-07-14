@@ -50,7 +50,3 @@ Route::post('/register', 'Auth\RegisterController@register');
 Route::get('/oauth/{driver}', 'Auth\OAuthController@redirect');
 Route::post('/oauth/{driver}', 'Auth\OAuthController@redirect');
 Route::get('/oauth/{driver}/callback', 'Auth\OAuthController@handleCallback')->name('oauth.callback');
-
-// OpenID Routes...
-Route::post('/openid/{driver}', 'Auth\OpenIDController@redirect')->name('openid');
-Route::get('/openid/{driver}/handle', 'Auth\OpenIDController@handleCallback')->name('openid.handle');

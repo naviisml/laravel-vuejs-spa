@@ -26,7 +26,6 @@
 
                         <p class="text-center text-muted">OR</p>
 
-                        <login-with-openid driver="steam" :callback="loginCallback" class="my-3" />
                         <login-with-oauth driver="discord" :callback="loginCallback" class="my-3" />
 					</div>
 				</div>

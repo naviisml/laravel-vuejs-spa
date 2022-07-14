@@ -79,11 +79,9 @@
                                     <tr v-for="(key, value) in permissions" :key="value">
                                         <td>{{ $t(`permissions.${value.replace(/\./g, "-")}.title`) }} <i class="text-muted">{{ $t(`permissions.${value.replace(/\./g, "-")}.description`) }}</i></td>
                                         <td>
-                                            <select class="form-control p-2" v-model="form.permissions[value]">
-                                                <option :value="true">Yes</option>
-                                                <option value="1">Inherit</option>
-                                                <option value="0">No</option>
-                                            </select>
+                                            <input type="radio" :value="true" v-model="form.permissions[value]">Yes
+                                            <input type="radio" value="undefined" v-model="form.permissions[value]">Inherit
+                                            <input type="radio" value="false" v-model="form.permissions[value]">No
                                         </td>
                                     </tr>
                                 </tbody>
@@ -137,19 +135,19 @@
                 }),
 				permissions: {
                     "interact": true,
-                    "user.user-logs": "1",
-                    "user.edit-profile": "1",
-                    "user.edit-password": "1",
-                    "admin": "1",
-                    "admin.users": "1",
-                    "admin.user.get": "1",
-                    "admin.user.edit": "1",
-                    "admin.user.roles": "1",
-                    "admin.user.roles.assign": "1",
-                    "admin.user.roles.delete": "1",
-                    "admin.user.logs": "1",
-                    "admin.roles": "1",
-                    "admin.role.edit": "1"
+                    "user.user-logs": "undefined",
+                    "user.edit-profile": "undefined",
+                    "user.edit-password": "undefined",
+                    "admin": "undefined",
+                    "admin.users": "undefined",
+                    "admin.user.get": "undefined",
+                    "admin.user.edit": "undefined",
+                    "admin.user.roles": "undefined",
+                    "admin.user.roles.assign": "undefined",
+                    "admin.user.roles.delete": "undefined",
+                    "admin.user.logs": "undefined",
+                    "admin.roles": "undefined",
+                    "admin.role.edit": "undefined"
                 }
 			}
 		},
@@ -206,6 +204,7 @@
              * @return  {null}
              */
             async create() {
+
                 const { data, status } = await this.form.post(`/api/v1/role/create`)
 
                 if (status == 200) {
@@ -254,7 +253,7 @@
                 // sync the permission settings with the form data
                 Object.keys(this.permissions).forEach(key => {
                     if (!this.role.permissions[key]) {
-                        this.role.permissions[key] = false
+                        this.role.permissions[key] = "undefined"
                     }
                 })
 

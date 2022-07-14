@@ -13,10 +13,8 @@ class EventServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-		'Illuminate\Auth\Events\Verified' => [
-			'App\Listeners\LogVerifiedUser',
-		],
         'SocialiteProviders\Manager\SocialiteWasCalled' => [
+            'SocialiteProviders\Steam\SteamExtendSocialite@handle',
             'SocialiteProviders\Discord\DiscordExtendSocialite@handle',
         ],
     ];

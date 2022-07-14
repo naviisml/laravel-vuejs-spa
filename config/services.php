@@ -33,17 +33,22 @@ return [
     'github' => [
         'client_id' => env('GITHUB_CLIENT_ID'),
         'client_secret' => env('GITHUB_CLIENT_SECRET'),
+        'redirect' => env('GITHUB_REDIRECT_URI', '/api/v1/oauth/github/callback')
     ],
 
     'discord' => [
         'client_id' => env('DISCORD_CLIENT_ID'),
         'client_secret' => env('DISCORD_CLIENT_SECRET'),
-        'redirect' => env('DISCORD_REDIRECT_URI', '/api/v1/oauth/discord/callback'),
+        'redirect' => env('DISCORD_REDIRECT_URI', '/api/v1/oauth/discord/callback')
     ],
 
     'steam' => [
-        'api_key' => env('STEAM_API_KEY'),
-        'redirect' => env('DISCORD_REDIRECT_URI', '/api/v1/openid/steam/callback'),
+        'client_id' => null,
+        'client_secret' => env('STEAM_CLIENT_SECRET'),
+        'redirect' => env('STEAM_REDIRECT_URI', '/api/v1/oauth/steam/callback'),
+        'allowed_hosts' => [
+            'localhost',
+        ]
     ],
 
     'example' => [

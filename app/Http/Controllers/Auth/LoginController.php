@@ -19,7 +19,8 @@ class LoginController extends Controller
      */
     public function __construct()
     {
-        $this->middleware(['web', 'guest', 'guest:api'])->except('logout');
+        $this->middleware(['web']);
+        $this->middleware(['guest', 'guest:api'])->except('logout');
     }
 
     /**
@@ -86,7 +87,8 @@ class LoginController extends Controller
      */
     public function logout(Request $request)
     {
-        $this->guard()->logout();
+        Auth::guard('api')->logout();
+        Auth::guard('web')->logout();
 
         return response()->json(null, 204);
     }

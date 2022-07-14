@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\User;
 
 use Illuminate\Http\Request;
-use Naviisml\IntraApi\Facades\IntraOAuth;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 

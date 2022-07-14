@@ -33,6 +33,15 @@ class OAuthProvider extends Model
     ];
 
     /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+		'provider_user_data' => 'array',
+    ];
+
+    /**
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function user()

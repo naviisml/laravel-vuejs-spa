@@ -1,5 +1,6 @@
 <template>
 	<div class="container py-5" v-if="user">
+        <!-- Edit Information -->
 		<div class="card">
 			<div class="card-content">
 				<h3 class="pb-3">Information</h3>
@@ -29,6 +30,27 @@
 				</form>
 			</div>
 		</div>
+
+        <!-- Edit Accounts -->
+		<div class="card mt-3">
+            <!-- Accounts -->
+			<div class="card-content">
+				<h3 class="pb-3">Accounts</h3>
+
+                <div class="d-flex justify-content-start">
+                    <div class="mr-3" v-for="(driver, key) in drivers" :key="key" @click="selectDriver(driver)">
+                        <login-with-oauth class="btn-primary btn-action p-3" :driver="driver" :callback="loginCallback" :user="user" @click="unselectDriver()" :isDisabled="!(!user.accounts[driver])">
+                            <i class="fab fa-2x" :class="`fa-${driver}`"></i>
+                        </login-with-oauth>
+                    </div>
+                </div>
+			</div>
+
+            <!-- Manage account -->
+			<div v-if="selectedAccount" class="card-footer">
+                Account Linked: {{ selectedAccount.provider_user_data.nickname }}
+			</div>
+		</div>
 	</div>
 </template>
 
@@ -48,7 +70,9 @@
 			return {
 				form: new Form({
 					email: '',
-				})
+				}),
+                drivers: ['steam', 'discord'],
+                selectedAccount: null
 			}
 		},
 
@@ -57,6 +81,19 @@
 		},
 
 		methods: {
+            async loginCallback() {
+                await this.$store.dispatch('auth/fetchUser')
+            },
+            selectDriver(driver = null) {
+                if (!(driver = this.user.accounts[driver])) {
+                    return false
+                }
+
+                this.selectedAccount = driver
+            },
+            unselectDriver() {
+                this.selectedAccount = null
+            },
 			async update () {
 				const { data, status } = await this.form.patch('/api/v1/me/profile')
 

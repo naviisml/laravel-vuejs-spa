@@ -89,13 +89,16 @@ export const actions = {
 	updateUser({ commit, dispatch }, payload) {
 		commit("USER_FETCH", payload)
 	},
+    /**
+     * Fetch the oauth url for a driver
+     *
+     * @param   {object}  ctx
+     * @param   {string}  provider
+     *
+     * @return  {string}
+     */
 	async fetchOAuthUrl (ctx, { provider }) {
 		const { data } = await axios.post(`/api/v1/oauth/${provider}`)
-
-		return data.url
-	},
-    async fetchOpenIDUrl (ctx, { provider }) {
-		const { data } = await axios.post(`/api/v1/openid/${provider}`)
 
 		return data.url
 	}

@@ -1,12 +1,14 @@
 <template>
-	<v-button v-if="driver" class="btn btn-block btn-outline ms-auto" type="button" @click="login" :loading="loading">
+	<v-button v-if="driver" class="btn ms-auto" type="button" @click="this.login" :loading="loading">
 		<slot name="label">
 			<div class="d-flex flex-row justify-content-center">
-				<div class="mr-2 pt-1" v-if="loading == false">
-					<i class="fab" :class="`fa-${driver}`"></i>
-				</div>
+                <slot>
+                    <div class="mr-2 pt-1" v-if="loading == false">
+                        <i class="fab" :class="`fa-${driver}`"></i>
+                    </div>
 
-				<p>Continue with {{ driver }}</p>
+                    <p>Continue with {{ driver }}</p>
+                </slot>
 			</div>
 		</slot>
 	</v-button>
@@ -31,6 +33,10 @@
             user: {
                 type: Object,
                 default: null
+            },
+            isDisabled: {
+                type: Boolean,
+                default: false
             }
 		},
 
@@ -50,6 +56,10 @@
 
 		methods: {
 			async login () {
+                if (this.isDisabled === true) {
+                    return false
+                }
+
 				const newWindow = openWindow('', 'Login')
 
 				let checkWindow = setInterval(() => {
@@ -82,7 +92,7 @@
 				})
 
                 if (this.callback) {
-                    return this.callback()
+                    return this.callback(this.user)
                 }
 			}
 		}

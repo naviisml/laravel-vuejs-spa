@@ -163,7 +163,7 @@ class OAuthController extends Controller
     protected function updateUser(SocialiteUser $socialite, User $user): User
     {
         $this->provider->update([
-            'provider_user_data' => json_encode($socialite, true),
+            'provider_user_data' => $socialite,
             'access_token' => $socialite->token,
             'refresh_token' => $socialite->refreshToken,
         ]);
@@ -187,7 +187,7 @@ class OAuthController extends Controller
 		$this->provider = $user->oauthProviders()->create([
 			'provider' => $this->driver,
 			'provider_user_id' => $socialite->getId(),
-            'provider_user_data' => json_encode($socialite, true),
+            'provider_user_data' => $socialite,
 			'access_token' => $socialite->token,
 			'refresh_token' => $socialite->refreshToken,
 		]);

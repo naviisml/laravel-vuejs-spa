@@ -26,8 +26,8 @@
 
                         <p class="text-center text-muted">OR</p>
 
-                        <login-with-oauth driver="steam" :callback="loginCallback" class="my-3" />
-                        <login-with-oauth driver="discord" :callback="loginCallback" class="my-3" />
+                        <login-with-oauth driver="steam" :callback="loginCallback" class="btn-block btn-outline my-3" />
+                        <login-with-oauth driver="discord" :callback="loginCallback" class="btn-block btn-outline my-3" />
 					</div>
 				</div>
 			</div>

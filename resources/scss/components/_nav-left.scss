@@ -52,6 +52,7 @@
             a.nav-link
             {
                 display: flex !important;
+                position: relative;
 
                 .icon
                 {
@@ -64,22 +65,30 @@
                     line-height: 1.2rem;
                 }
 
+                &:after
+                {
+                    -webkit-transition: height .15s ease-in-out;
+                    -moz-transition: height .15s ease-in-out;
+                    -o-transition: height .15s ease-in-out;
+                    transition: height .15s ease-in-out;
+                    background: rgb(var(--nav-foreground-color));
+                    content: " ";
+                    position: absolute;
+                    left: 0;
+                    top: 50%;
+                    transform: translateY(-50%);
+                    height: 0;
+                    border-radius: 10px;
+                    width: 5px;
+                }
+
                 &.router-link-exact-active,
                 &.is-active
                 {
-                    position: relative;
 
                     &:after
                     {
-                        background: rgb(var(--nav-foreground-color));
-                        content: " ";
-                        position: absolute;
-                        left: 0;
-                        top: 50%;
-                        transform: translateY(-50%);
                         height: 20px;
-                        border-radius: 10px;
-                        width: 5px;
                     }
                 }
             }

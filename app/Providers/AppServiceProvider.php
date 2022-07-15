@@ -5,6 +5,9 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Dusk\DuskServiceProvider;
+use App\Libraries\IP;
+use App\Libraries\Email;
+use App;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -18,6 +21,14 @@ class AppServiceProvider extends ServiceProvider
         if ($this->app->runningUnitTests()) {
             Schema::defaultStringLength(191);
         }
+
+        App::bind('ip', function() {
+            return new IP;
+        });
+
+        App::bind('email', function() {
+            return new Email;
+        });
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Facades\IP;
 
 class Log extends Model
 {
@@ -58,19 +59,7 @@ class Log extends Model
 	 */
 	public function getIpFilteredAttribute()
 	{
-		$ip_array = explode('.', $this->ip_address);
-		$new_ip = [];
-		$i = 0;
-
-		foreach($ip_array as $part) {
-			if($part != $ip_array[0] && $part != end($ip_array)) {
-				$new_ip[$i++] = str_repeat("*", strlen($part));
-			} else {
-				$new_ip[$i++] = $part;
-			}
-		}
-
-		return implode('.', $new_ip);
+		return IP::filterIpAdress($this->ip_address);
 	}
 
     /**

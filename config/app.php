@@ -235,6 +235,11 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
 
+        /*
+         * Custom Aliasses...
+         */
+        'IP' => App\Facades\IP::class,
+
     ],
 
 ];

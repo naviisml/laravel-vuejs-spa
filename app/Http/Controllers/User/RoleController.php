@@ -28,13 +28,13 @@ class RoleController extends Controller
 
 		// Check if the user has these permissions
 		if (!$user || !$user->hasPermissions(['admin.roles'])) {
-			return abort(401);
+			return abort(401, "You are not authorized to view this content");
 		}
 
 		$this->roles = Role::select(['id', 'displayname', 'tag'])->get();
 
         if (!$this->roles) {
-            return abort(404);
+            return abort(404, "The resource that you are looking for doesn't exist");
         }
 
 		return $this->roles;
@@ -54,13 +54,13 @@ class RoleController extends Controller
 
 		// Check if the user has these permissions
 		if (!$user || !$user->hasPermissions(['admin.roles', 'admin.role.edit'])) {
-			return abort(401);
+			return abort(401, "You are not authorized to view this content");
 		}
 
 		$this->role = Role::where('id', $id)->first();
 
         if (!$this->role) {
-            return abort(404);
+            return abort(404, "The resource that you are looking for doesn't exist");
         }
 
 		return $this->role;
@@ -79,7 +79,7 @@ class RoleController extends Controller
 
 		// check if we have the permissions to update other users (if neccesary)
 		if (!$user->hasPermissions(['admin.roles'])) {
-			return abort(401);
+			return abort(401, "You are not authorized to view this content");
 		}
 
         // validate the request input
@@ -116,14 +116,14 @@ class RoleController extends Controller
 
 		// check if we have the permissions to update other users (if neccesary)
 		if (!$user->hasPermissions(['admin.roles'])) {
-			return abort(401);
+			return abort(401, "You are not authorized to view this content");
 		}
 
         // check if the role exists
 		$this->role = Role::where('id', $id)->first();
 
         if (!$this->role) {
-            return abort(404);
+            return abort(404, "The resource that you are looking for doesn't exist");
         }
 
         // validate the request input
@@ -154,14 +154,14 @@ class RoleController extends Controller
 
 		// check if we have the permissions to update other users (if neccesary)
 		if (!$user->hasPermissions(['admin.roles'])) {
-			return abort(401);
+			return abort(401, "You are not authorized to view this content");
 		}
 
         // check if the role exists
 		$this->role = Role::where('id', $id)->first();
 
         if (!$this->role) {
-            return abort(404);
+            return abort(404, "The resource that you are looking for doesn't exist");
         }
 
         // validate the request input
@@ -218,21 +218,21 @@ class RoleController extends Controller
 
 		// check if the user has these permissions
 		if (!$user || !$user->hasPermissions(['admin.user.roles', 'admin.user.roles.assign'])) {
-			return abort(401);
+			return abort(401, "You are not authorized to view this content");
 		}
 
 		// check if the user exists
 		$target = User::where('id', $id)->first();
 
 		if (!$target) {
-			return abort(401);
+			return abort(401, "You are not authorized to view this content");
 		}
 
 		// check if the role exists
 		$this->role = Role::where(['id' => $role_id])->first();
 
 		if (!$this->role) {
-			return abort(404);
+			return abort(404, "The resource that you are looking for doesn't exist");
 		}
 
 		// Assign the user role
@@ -265,14 +265,14 @@ class RoleController extends Controller
 
 		// Check if the user has these permissions
 		if (!$user || !$user->hasPermissions(['admin.user.roles', 'admin.user.roles.delete'])) {
-			return abort(401);
+			return abort(401, "You are not authorized to view this content");
 		}
 
 		// Get the user
 		$target = User::where('id', $id)->first();
 
 		if (!$target) {
-			return abort(404);
+			return abort(404, "The resource that you are looking for doesn't exist");
 		}
 
 		// Get the role

@@ -41,7 +41,7 @@ class UserController extends Controller
 
 		// Check if the user has these permissions
 		if (!$user->hasPermission('admin.users')) {
-			return abort(401);
+			return abort(401, "You are not authorized to view this content");
 		}
 
 		// Get the user
@@ -64,12 +64,12 @@ class UserController extends Controller
 
 		// check if we have the permissions to update other users (if neccesary)
 		if ($target->id != $user->id && !$user->hasPermissions(['admin.users', 'admin.user.get'])) {
-			return abort(401);
+			return abort(401, "You are not authorized to view this content");
 		}
 
 		// check if $target exists
 		if (!$target) {
-			return abort(404);
+			return abort(404, "The resource that you are looking for doesn't exist");
 		}
 
         return response()->json($target);
@@ -85,12 +85,12 @@ class UserController extends Controller
 
 		// check if we have the permissions to update other users (if neccesary)
 		if ($target->id != $user->id && !$user->hasPermissions(['admin.users', 'admin.user.edit'])) {
-			return abort(401);
+			return abort(401, "You are not authorized to view this content");
 		}
 
 		// check if $target exists
 		if (!$target) {
-			return abort(404);
+			return abort(404, "The resource that you are looking for doesn't exist");
 		}
 
         // validate the request input

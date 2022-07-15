@@ -31,12 +31,12 @@ class LogController extends Controller
 
 		// check if we have the permissions to update other users (if neccesary)
 		if ($target->id != $user->id && !$user->hasPermissions(['admin.users', 'admin.user.logs'])) {
-			return abort(401);
+			return abort(401, "You are not authorized to view this content");
 		}
 
 		// check if $target exists
 		if (!$target) {
-			return abort(404);
+			return abort(404, "The resource that you are looking for doesn't exist");
 		}
 
 		// Get the logs

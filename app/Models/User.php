@@ -5,15 +5,27 @@ namespace App\Models;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Contracts\Auth\MustVerifyEmail;
+//use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Notifications\Notifiable;
-use App\Notifications\ResetPassword;
-use App\Notifications\VerifyEmail;
+use App\Traits\Role;
+use App\Traits\Log;
 
 class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
 {
-    use Notifiable,
+    use Role,
+        Log,
+        Notifiable,
         HasFactory;
+
+    /**
+     * @var array
+     */
+    protected $roles;
+
+    /**
+     * @var array
+     */
+    protected $permissions;
 
     /**
      * The attributes that are mass assignable.
@@ -74,13 +86,7 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
      */
     public function getRolesAttribute()
     {
-		$roles = $this->roles()->get()->toArray();
-
-		usort($roles, function($a, $b) {
-			return $a['order'] <=> $b['order'];
-		});
-
-		return $roles;
+		return $this->getRoles();
     }
 
     /**
@@ -90,96 +96,8 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
      */
 	public function getPermissionsAttribute()
 	{
-		$roles = $this->getRolesAttribute();
-
-		foreach ($roles as $role) {
-			if (isset($role['data']) && is_array($role['data']['permissions']))
-				$permissions = array_merge($permissions ?? [], array_filter($role['data']['permissions'], function($v, $k) {
-                    return $v !== "undefined";
-                }, ARRAY_FILTER_USE_BOTH));
-		}
-
-		return $permissions ?? [];
+		return $this->getPermissions();
 	}
-
-	/**
-	 * Check if the user has a specific permission
-	 *
-	 * @param   string  $permission
-	 *
-	 * @return  boolean
-	 */
-	public function hasPermission($permission)
-	{
-		if (is_array($permission)) {
-			$this->hasPermissions($permission);
-		}
-
-		if (!isset($this->permissions[$permission]) || $this->permissions[$permission] == false) {
-			return false;
-		}
-
-		return true;
-	}
-
-	/**
-	 * Loop through the array of permissions, and check if the user has all of them
-	 *
-	 * @param   array  $permissions
-	 *
-	 * @return  boolean
-	 */
-	public function hasPermissions($permissions)
-	{
-		if (is_array($permissions)) {
-			foreach ($permissions as $permission)  {
-				if ($this->hasPermission($permission) === false) {
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-		return $this->hasPermission($permission);
-	}
-
-	/**
-	 * Create a user specific log
-	 *
-	 * @param   string  $action
-	 *
-	 * @return  App\Models\User\Log
-	 */
-	public function log($action = null, $metadata = [], $target_id = null)
-	{
-		return Log::create([
-			'user_id' => $this->id,
-            'target_id' => $target_id ?? $this->id,
-			'ip_address' => $this->getIp(),
-			'action' => $action,
-			'metadata' => json_encode($metadata),
-		]);
-	}
-
-    /**
-     * Get the users' roles
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-	public function roles()
-	{
-		return $this->hasMany(UserRole::class, 'user_id', 'id');
-	}
-
-    /**
-     * Get the users' logs
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function logs(){
-        return $this->hasMany(Log::class)->orWhere('target_id', $this->id);
-    }
 
     /**
      * Get the oauth providers.
@@ -206,25 +124,4 @@ class User extends Authenticatable implements JWTSubject //, MustVerifyEmail
     {
         return [];
     }
-
-	/**
-	 * Return the client's REAL ip
-	 *
-	 * @return  $ip_address
-	 */
-	protected function getIp()
-	{
-		foreach (array('HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR') as $key){
-			if (array_key_exists($key, $_SERVER) === true){
-				foreach (explode(',', $_SERVER[$key]) as $ip){
-					$ip = trim($ip); // just to be safe
-					if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE) !== false){
-						return $ip;
-					}
-				}
-			}
-		}
-
-		return request()->ip();
-	}
 }

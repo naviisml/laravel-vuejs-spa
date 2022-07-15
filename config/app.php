@@ -239,6 +239,7 @@ return [
          * Custom Aliasses...
          */
         'IP' => App\Facades\IP::class,
+        'Email' => App\Facades\Email::class,
 
     ],
 

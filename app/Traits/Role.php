@@ -27,7 +27,7 @@ trait Role
     public function getRoles()
     {
         if (!$this->roles) {
-		    $this->roles = $this->roles()->orderBy('override')->get()->toArray();
+		    $this->roles = $this->roles()->get()->toArray();
 
             usort($this->roles, function($a, $b) {
                 return $a['order'] <=> $b['order'];

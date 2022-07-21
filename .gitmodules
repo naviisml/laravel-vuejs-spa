@@ -1,0 +1,9 @@
+[submodule "creator/naveldev/toolkit"]
+	path = creator/naveldev/toolkit
+	url = https://github.com/naveldev/toolkit
+[submodule "creator/naveldev/laravel-toolkit"]
+	path = creator/naveldev/laravel-toolkit
+	url = https://github.com/naveldev/laravel-toolkit
+[submodule "creator/naveldev/laravel-roles"]
+	path = creator/naveldev/laravel-roles
+	url = https://github.com/naveldev/laravel-roles

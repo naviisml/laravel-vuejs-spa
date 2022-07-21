@@ -7,11 +7,12 @@
     "repositories": [
         {
             "type": "path",
-            "url": "creator/naviisml/laravel-package-boilerplate"
+            "url": "creator/*/*",
+            "symlink": true
         }
     ],
     "require": {
-        "php": "^8.1",
+        "php": "^8",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
         "laravel/framework": "^9.0",
@@ -19,9 +20,10 @@
         "laravel/tinker": "^2.6",
         "laravel/ui": "^3.3",
         "socialiteproviders/discord": "^4.1",
-        "socialiteproviders/manager": "^4.1",
-        "socialiteproviders/steam": "^4.2",
-        "tomfordrumm/jwt-auth": "dev-develop"
+        "tomfordrumm/jwt-auth": "dev-develop",
+        "naveldev/toolkit": "^1.0.0",
+        "naveldev/laravel-toolkit": "^1.0.0",
+        "naveldev/laravel-roles": "^1.0.0"
     },
     "require-dev": {
         "doctrine/dbal": "^2.13",
